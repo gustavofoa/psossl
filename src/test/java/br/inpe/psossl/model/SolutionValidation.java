@@ -69,14 +69,12 @@ public class SolutionValidation {
 		Equipment equipment1 = new Equipment(1, 1, 1);
 		equipment1.setX(5);
 		equipment1.setY(5);
+		equipment1.setFace(1);
 		
 		Equipment equipment2 = new Equipment(1, 1, 1);
-		equipment2.setX(4);
-		equipment2.setY(4);
 		
 		List<Equipment> items = new ArrayList<Equipment>();
 		items.add(equipment1);
-		items.add(equipment2);
 		
 		Solution solution = new Solution(container, items);
 		
