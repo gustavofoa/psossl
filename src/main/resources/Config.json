@@ -1,0 +1,55 @@
+{
+    "container": {
+        "width": 100,
+        "height": 100
+    },
+    "items": [
+        {
+            "width": 30,
+            "height": 20,
+            "mass": 2
+        },{
+            "width": 13,
+            "height": 18,
+            "mass": 1
+        },{
+            "width": 10,
+            "height": 20,
+            "mass": 1
+        },{
+            "width": 10,
+            "height": 8,
+            "mass": 2
+        },{
+            "width": 13,
+            "height": 18,
+            "mass": 3
+        },{
+            "width": 20,
+            "height": 23,
+            "mass": 1
+        },{
+            "width": 8,
+            "height": 13,
+            "mass": 1.5
+        },{
+            "width": 6,
+            "height": 8,
+            "mass": 0.5
+        }
+    ],
+    "defaultAlgorithm": "ACO",
+    "LAMBDA1": 1,
+    "LAMBDA2": 1,
+    "EXECUCOES": 25,
+    "LOG_FOLDER": "/tmp/psossl/resultados",
+    "SEED": 98456,
+    "ACOParams":{
+        "ALPHA": 1,
+        "BETA": 1,
+        "TAXA_DECAIMENTO": 0.9,
+        "Q0": 0.2,
+        "ITERACOES": 1000,
+        "FORMIGAS": 10
+    }
+}
