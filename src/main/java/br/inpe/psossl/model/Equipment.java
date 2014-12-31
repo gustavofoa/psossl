@@ -49,6 +49,8 @@ public class Equipment {
 		this.height = height;
 		this.mass = mass;
 		this.color = color;
+		if(face==0)
+			face = 1;
 	}
 	
 	public List<EquipmentRelationship> getRelationships() {

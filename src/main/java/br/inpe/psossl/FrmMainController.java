@@ -108,6 +108,8 @@ public class FrmMainController implements Initializable {
 	private Slider					sliderAngle;
 	@FXML
 	private CheckBox				chkFixar;
+    @FXML
+    private ComboBox<String>        cmbFace;
 	
 	@FXML
 	protected void addItemAction(ActionEvent event) throws IOException {
@@ -279,6 +281,7 @@ public class FrmMainController implements Initializable {
 					sliderY.setDisable(running);
 					sliderAngle.setDisable(running);
 					chkFixar.setDisable(running);
+					cmbFace.setDisable(running);
 					
 					PrintWriter fileWriter = null;
 					
@@ -398,6 +401,7 @@ public class FrmMainController implements Initializable {
 		sliderY.setDisable(running);
 		sliderAngle.setDisable(running);
 		chkFixar.setDisable(running);
+		cmbFace.setDisable(running);
 	}
 	
 	private void drawSolution() {
@@ -460,6 +464,7 @@ public class FrmMainController implements Initializable {
 					sliderY.setValue(equipment.getY());
 					sliderAngle.setValue(equipment.getAngle());
 					chkFixar.setSelected(equipment.isFixed());
+					cmbFace.setValue(equipment.getFace()==2?"Face 2":"Face 1");
 				}
 			} else {
 				rect.setStroke(Color.BLACK);
@@ -514,6 +519,7 @@ public class FrmMainController implements Initializable {
 							sliderY.setValue(equipment.getY());
 							sliderAngle.setValue(equipment.getAngle());
 							chkFixar.setSelected(equipment.isFixed());
+                            cmbFace.setValue(equipment.getFace()==2?"Face 2":"Face 1");
 							running = false;
 							break;
 						}
@@ -601,8 +607,36 @@ public class FrmMainController implements Initializable {
 						itemTable.getSelectionModel().getSelectedItem().setFixed(t1.booleanValue());
 					}
 				}
+				sliderX.setDisable(t1.booleanValue());
+				sliderY.setDisable(t1.booleanValue());
+				sliderAngle.setDisable(t1.booleanValue());
+				cmbFace.setDisable(t1.booleanValue());
 			}
 		});
+		
+		cmbFace.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                if (running || solution == null) {
+                    return;
+                }
+                for (Equipment equipment : solution.getItems()) {
+                    if (itemTable.getSelectionModel().getSelectedIndex() != -1
+                            && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
+                        if (solution.validateAndAddItem(equipment, equipment.getX(),
+                                equipment.getY(), equipment.getAngle(), cmbFace.getValue().equals("Face 2")?2:1)) {
+                            
+                            drawSolution();
+                            lblInfo.setText(String.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}",
+                                    solution.getFitness(), solution.getMassCenter(),
+                                    solution.getMassCenterX() - solution.getContainer().getWidth() / 2,
+                                    solution.getMassCenterY() - solution.getContainer().getHeight() / 2,
+                                    solution.getMomentOfInertia()));
+                        }
+                    }
+                }
+            }
+        });
 		
 	}
 	
