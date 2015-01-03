@@ -17,13 +17,13 @@ Regardless of your operating system, you must have the following things installe
 
 Open a system shell and check out the sources into some directory. Then 'cd' into that directory and type:
 
-'mvn clean package'
+"mvn clean package"
 
 The resulting built artifacts will be located under the target directory. 
 
 To launch it, run:
 
-'java -jar ./target/psossl-"version".jar'
+"java -jar ./target/psossl-'version'.jar"
 
 Pay atention in the version of the jar in order to execute the right file.
 
