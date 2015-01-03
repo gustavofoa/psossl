@@ -748,6 +748,9 @@ public class FrmMainController implements Initializable {
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddConstraintController myController = fxmlLoader.getController();
 		Scene scene = new Scene(root);
+		
+		myController.setEquipment(itemTable.getSelectionModel().getSelectedItem());
+		myController.setReferences(itemTable.getItems());
 
 		Stage dialogStage = new Stage();
 		dialogStage.setTitle("Adicionar Restrição");
