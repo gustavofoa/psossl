@@ -133,7 +133,7 @@ public class Solution {
 			}
 		}
 
-		Equipment equip = new Equipment(equipment.getID(),
+		Equipment equip = new Equipment(equipment.getId(),
 				equipment.getWidth(), equipment.getHeight(),
 				equipment.getMass(), equipment.getColor());
 		equip.setX(x);

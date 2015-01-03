@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import br.inpe.psossl.ux.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-classpath-element ../../../../build/classes?>
+
+<AnchorPane id="AnchorPane" prefHeight="230.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.FrmAddConstraintController">
+  <children>
+    <GridPane alignment="CENTER" hgap="10.0" layoutX="38.0" layoutY="14.0" prefWidth="273.0" vgap="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
+      <children>
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Objeto Referência:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+          <GridPane.margin>
+            <Insets bottom="20.0" right="10.0" top="20.0" fx:id="x1" />
+          </GridPane.margin>
+        </Label>
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tipo:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="1" />
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Distância:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="2" />
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Face:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="3" />
+        <ComboBox fx:id="cmbRerefence" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="0">
+        </ComboBox>
+        <ComboBox fx:id="cmbTipo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="1">
+            <items>
+              <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Mínimo" />
+               <String fx:value="Máximo" />
+               <String fx:value="Face" />
+              </FXCollections>
+            </items>
+        </ComboBox>
+        <NumberTextField fx:id="txtDistance" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <ComboBox fx:id="cmbFace" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="3">
+            <items>
+              <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Face 1" />
+               <String fx:value="Face 2" />
+              </FXCollections>
+            </items>
+        </ComboBox>
+        <Button fx:id="btnAdd" alignment="CENTER" contentDisplay="RIGHT" defaultButton="true" maxWidth="-1.0" mnemonicParsing="false" onAction="#addConstraintAction" prefWidth="110.0" text="Adicionar" textAlignment="RIGHT" underline="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+        <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" onAction="#cancelAddConstraintAction" prefWidth="91.0" text="Cancelar" underline="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="145.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints />
+      </rowConstraints>
+         <opaqueInsets>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </opaqueInsets>
+    </GridPane>
+  </children>
+</AnchorPane>

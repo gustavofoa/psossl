@@ -13,7 +13,7 @@ import br.inpe.psossl.model.Equipment;
 import br.inpe.psossl.model.Solution;
 
 public class ACOAlgorithm extends ConstructiveAlgorithm {
-	
+
 	private List<ACONode>	nodes;
 	public static int		n;
 	public static double	ALPHA	= 1;
@@ -22,7 +22,7 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 	public static double	Q0		= 0.2;
 	public static int		MAX		= 1000;
 	public static int		M		= 100;
-	
+
 	public ACOAlgorithm(Container container, List<Equipment> items, Type type) {
 		super(container, items, type);
 		if (type == Type.NORMAL) {
@@ -36,10 +36,10 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 			NOME = "Ant Colony Optimization With Equipment Relationship II";
 		}
 	}
-	
+
 	@Override
 	public void execute() {
-		
+
 		updateMessage("Inicializando parâmetros e a matriz de feromônio.");
 		nodes = new ArrayList<ACONode>();
 		for (Equipment equipment : items)// Cria os vértices do grafo
@@ -57,17 +57,17 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < MAX; i++) {
 			if (isCancelled()) {
 				return;
 			}
-			
+
 			Solution[] solutions = new Solution[M];
 			List<ACONode>[] solutionsNodes = new ArrayList[M];
-			
+
 			for (int k = 0; k < M; k++) {
-				
+
 				// cria uma solução para a formiga k trabalhar
 				solutions[k] = new Solution(container, items, true);
 				List<ACONode> solutionNodes = solutionsNodes[k] = new ArrayList<ACONode>();
@@ -76,11 +76,11 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 				solutionNodes.add(firstNode);// aloca a formiga em um nó
 												// aleatoriamente
 				addEquipmentIntoSolutionInRandomPosition(solutions[k], firstNode.getEquipment());
-				
+
 				while (solutionNodes.size() < n) {
-					
+
 					ACONode lastNode = solutionNodes.get(solutionNodes.size() - 1);
-					
+
 					// obtém as probabilidades
 					List<Double> probabilities = new ArrayList<Double>();
 					int biggestProbIndex = 0;
@@ -93,9 +93,9 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 						}
 						probabilities.add(p);
 					}
-					
+
 					ACOEdge selectedEdge = null;
-					
+
 					// verifica o q0
 					if (OptimizationAlgorithm.RANDOM.nextDouble() < Q0) {
 						selectedEdge = lastNode.getEdges().get(biggestProbIndex);
@@ -114,12 +114,12 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 							break;
 						}
 					}
-					
+
 					// Caminha para o nó selecionado
 					ACONode nextNode = selectedEdge.getNode1() == lastNode ? selectedEdge.getNode2() : selectedEdge.getNode1();
 					solutionNodes.add(nextNode);
 					nextNode.setVisited(true);
-					
+
 					// adicionar equipamento na solução
 					try {
 						if (type == Type.NORMAL) {
@@ -142,16 +142,16 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 														// aleatoriamente
 						addEquipmentIntoSolutionInRandomPosition(solutions[k], firstNode.getEquipment());
 					}
-					
+
 				}
-				
+
 				for (ACONode node : solutionNodes) {
 					node.setVisited(false);
 				}
-				
+
 			}
-			
-			// Update the pheromone on the walked path by (9) and (10)
+
+			// Update the pheromone
 			for (ACONode node : solutionsNodes[0]) {
 				for (ACOEdge edge : node.getEdges()) {
 					edge.decayPheromoneFromNode(node);
@@ -185,30 +185,26 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 					atual.updateEquipmentRelationship();
 				}
 			}
-			
+
 			updateProgress(i, MAX);
-			updateMessage(String.format(
-					"Iteração %d de %d <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", i,
-					MAX, bestSolution.getFitness(), bestSolution.getMassCenter(), bestSolution.getMassCenterX()
-							- bestSolution.getContainer().getWidth() / 2,
-					bestSolution.getMassCenterY() - bestSolution.getContainer().getHeight() / 2, bestSolution.getMomentOfInertia()));
+			updateMessage(String.format("Iteração %d de %d <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", i, MAX, bestSolution.getFitness(),
+					bestSolution.getMassCenter(), bestSolution.getMassCenterX() - bestSolution.getContainer().getWidth() / 2, bestSolution.getMassCenterY() - bestSolution.getContainer().getHeight()
+							/ 2, bestSolution.getMomentOfInertia()));
 		}
-		
-		updateMessage("nologscreenParâmetro utilizados:" + "\n              SEED = " + SEED + "\n             ALPHA = " + ALPHA
-				+ "\n              BETA = " + BETA + "\nTaxa de Decaimento = " + RO + "\n                q0 = " + Q0 + "\n         ITERAÇÕES = "
-				+ MAX + "\n          FORMIGAS = " + M + "\n          LAMBDA1  = " + Solution.LAMBDA1 + "\n          LAMBDA2  = " + Solution.LAMBDA2
-				+ "\nMelhor solução encontrada: " + bestSolution);
+
+		updateMessage("nologscreenParâmetro utilizados:" + "\n              SEED = " + SEED + "\n             ALPHA = " + ALPHA + "\n              BETA = " + BETA + "\nTaxa de Decaimento = " + RO
+				+ "\n                q0 = " + Q0 + "\n         ITERAÇÕES = " + MAX + "\n          FORMIGAS = " + M + "\n          LAMBDA1  = " + Solution.LAMBDA1 + "\n          LAMBDA2  = "
+				+ Solution.LAMBDA2 + "\nMelhor solução encontrada: " + bestSolution);
 		updateProgress(MAX, MAX);
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException ex) {
 			Logger.getLogger(ACOAlgorithm.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		updateMessage(String.format(
-				"Execução finalizada! <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.cm2}",
-				bestSolution.getFitness(), bestSolution.getMassCenter(), bestSolution.getMassCenterX() - bestSolution.getContainer().getWidth() / 2,
-				bestSolution.getMassCenterY() - bestSolution.getContainer().getHeight() / 2, bestSolution.getMomentOfInertia()));
-		
+		updateMessage(String.format("Execução finalizada! <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.cm2}", bestSolution.getFitness(),
+				bestSolution.getMassCenter(), bestSolution.getMassCenterX() - bestSolution.getContainer().getWidth() / 2, bestSolution.getMassCenterY() - bestSolution.getContainer().getHeight() / 2,
+				bestSolution.getMomentOfInertia()));
+
 	}
-	
+
 }

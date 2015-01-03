@@ -39,7 +39,7 @@
         }
     ],
     "defaultAlgorithm": "ACO",
-    "LAMBDA1": 1,
+    "LAMBDA1": 10000,
     "LAMBDA2": 1,
     "EXECUCOES": 25,
     "LOG_FOLDER": "/tmp/psossl/resultados",

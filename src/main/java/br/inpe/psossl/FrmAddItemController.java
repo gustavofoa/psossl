@@ -29,9 +29,6 @@ public class FrmAddItemController implements Initializable {
     @FXML private NumberTextField txtWidth;
     @FXML private NumberTextField txtHeight;
     @FXML private NumberTextField txtMass;
-    /*@FXML private NumberTextField txtMassCenterX;
-    @FXML private NumberTextField txtMassCenterY;
-    @FXML private NumberTextField txtMassCenterZ;*/
     @FXML private Button btnAdd;
     
     @FXML
@@ -39,9 +36,6 @@ public class FrmAddItemController implements Initializable {
         double w = txtWidth.getNumber().doubleValue();
         double h = txtHeight.getNumber().doubleValue();
         double mass = txtMass.getNumber().doubleValue();
-        /*double massCenterX = txtMassCenterX.getNumber().doubleValue();
-        double massCenterY = txtMassCenterY.getNumber().doubleValue();
-        double massCenterZ = txtMassCenterZ.getNumber().doubleValue();*/
         if(item==null)
             item = new Equipment(w, h, mass);
         else

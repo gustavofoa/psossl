@@ -44,6 +44,7 @@ import br.inpe.psossl.algorithm.ConstructiveAlgorithm;
 import br.inpe.psossl.algorithm.GEOAlgorithm;
 import br.inpe.psossl.algorithm.MPCA;
 import br.inpe.psossl.algorithm.OptimizationAlgorithm;
+import br.inpe.psossl.model.Constraint;
 import br.inpe.psossl.model.Container;
 import br.inpe.psossl.model.Equipment;
 import br.inpe.psossl.model.Solution;
@@ -55,18 +56,18 @@ import br.inpe.psossl.ux.NumberTextField;
  * @author Gustavo Furtado
  */
 public class FrmMainController implements Initializable {
-	
+
 	public static int				SEED;
 	private static Random			RANDOM;
-	
+
 	private int						execution		= 0;
-	private List<Solution>			solutions		= new ArrayList();
-	private List<Long>				durations		= new ArrayList();
+	private List<Solution>			solutions		= new ArrayList<Solution>();
+	private List<Long>				durations		= new ArrayList<Long>();
 	private Stage					primaryStage;
 	private Solution				solution;
 	private Solution				worstSolution;
 	private OptimizationAlgorithm	optimizationAlgorithm;
-	private ChangeListener			resizeListener	= new ChangeListener<Number>() {
+	private ChangeListener<Number>	resizeListener	= new ChangeListener<Number>() {
 														public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
 															drawSolution();
 														}
@@ -108,9 +109,17 @@ public class FrmMainController implements Initializable {
 	private Slider					sliderAngle;
 	@FXML
 	private CheckBox				chkFixar;
-    @FXML
-    private ComboBox<String>        cmbFace;
-	
+	@FXML
+	private ComboBox<String>		cmbFace;
+	@FXML
+	private Button					btnAddConstraint;
+	@FXML
+	private Button					btnEditConstraint;
+	@FXML
+	private Button					btnRemoveConstraint;
+	@FXML
+	private TableView<Constraint>	constraintsTable;
+
 	@FXML
 	protected void addItemAction(ActionEvent event) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddItem.fxml"));
@@ -118,7 +127,7 @@ public class FrmMainController implements Initializable {
 		FrmAddItemController myController = fxmlLoader.getController();
 		myController.setPrimaryStage(primaryStage);
 		Scene scene = new Scene(root);
-		
+
 		Stage dialogStage = new Stage();
 		dialogStage.setTitle("Adicionar Item");
 		dialogStage.setResizable(false);
@@ -129,21 +138,21 @@ public class FrmMainController implements Initializable {
 		myController.setItemList(itemTable.getItems());
 		dialogStage.showAndWait();
 	}
-	
+
 	@FXML
 	protected void editItemAction(ActionEvent event) throws IOException {
-		
+
 		if (itemTable.getSelectionModel().getSelectedItem() == null) {
 			MessageBox.show(primaryStage, "Selecione um objeto para editar!", "Não há objeto selecionado", MessageBox.ICON_ERROR | MessageBox.OK);
 			return;
 		}
-		
+
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddItem.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddItemController myController = fxmlLoader.getController();
 		myController.setPrimaryStage(primaryStage);
 		Scene scene = new Scene(root);
-		
+
 		Stage dialogStage = new Stage();
 		dialogStage.setTitle("Editar Item");
 		dialogStage.setResizable(false);
@@ -168,30 +177,30 @@ public class FrmMainController implements Initializable {
 		itemTable.getColumns().get(0).setVisible(false);
 		itemTable.getColumns().get(0).setVisible(true);
 	}
-	
+
 	@FXML
 	protected void removeItemAction(ActionEvent event) {
-		
+
 		if (itemTable.getSelectionModel().getSelectedItem() == null) {
 			MessageBox.show(primaryStage, "Selecione um objeto para remover!", "Não há objeto selecionado", MessageBox.ICON_ERROR | MessageBox.OK);
 			return;
 		}
-		
+
 		itemTable.getItems().remove(itemTable.getSelectionModel().getSelectedItem());
-		
+
 	}
-	
+
 	@FXML
 	protected void configAlgorithmParamsAction(ActionEvent event) throws IOException {
-		
+
 		if (cmbAlgorithm.getSelectionModel().getSelectedIndex() == -1) {
 			MessageBox.show(primaryStage, "Selecione um algoritmo!", "Algoritmo não selecionado", MessageBox.ICON_ERROR | MessageBox.OK);
 			cmbAlgorithm.requestFocus();
 			return;
 		}
-		
+
 		FXMLLoader fxmlLoader = null;
-		
+
 		switch (cmbAlgorithm.getSelectionModel().getSelectedItem()) {
 		case "ACO":
 		case "ACO (Com afinidade entre equipamentos I)":
@@ -209,12 +218,12 @@ public class FrmMainController implements Initializable {
 			fxmlLoader = new FXMLLoader(getClass().getResource("FrmMPCAParams.fxml"));
 			break;
 		}
-		
+
 		Parent root = (Parent) fxmlLoader.load();
 		FrmParamsController myController = fxmlLoader.getController();
 		myController.setPrimaryStage(primaryStage);
 		Scene scene = new Scene(root);
-		
+
 		Stage dialogStage = new Stage();
 		dialogStage.setTitle("Editar Parâmetros");
 		dialogStage.setResizable(false);
@@ -224,17 +233,17 @@ public class FrmMainController implements Initializable {
 		myController.setStage(dialogStage);
 		dialogStage.showAndWait();
 	}
-	
+
 	@FXML
 	public void startAction(ActionEvent event) {
-		
+
 		if (execution == 0) {
 			OptimizationAlgorithm.SEED = FrmMainController.SEED;
 			FrmMainController.RANDOM = new Random(FrmMainController.SEED);
 		} else {
 			OptimizationAlgorithm.SEED = FrmMainController.RANDOM.nextInt(1000000000);
 		}
-		
+
 		execution++;
 		running = !running;
 		if (running) {
@@ -243,18 +252,18 @@ public class FrmMainController implements Initializable {
 			if (!validate()) {
 				return;
 			}
-			
+
 			btnStart.setText("Parar");
 			txtLog.clear();
 			final ProgressObserver progressObserver = new ProgressObserver(optimizationAlgorithm);
-			
+
 			progressBar.progressProperty().bind(progressObserver.progressProperty());
 			progressObserver.messageProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 					solution = optimizationAlgorithm.getBestSolution();
 					if (solution != null) {
-						
+
 						if (newValue.length() >= 11 && !newValue.substring(0, 11).equals("nologscreen")) {
 							txtLog.appendText(newValue + "\n");
 							lblInfo.setText("Execução " + execution + " | " + newValue);
@@ -277,18 +286,22 @@ public class FrmMainController implements Initializable {
 					btnEditItem.setDisable(running);
 					btnRemoveItem.setDisable(running);
 					btnAlgorithmParams.setDisable(running);
-					sliderX.setDisable(running);
-					sliderY.setDisable(running);
-					sliderAngle.setDisable(running);
 					chkFixar.setDisable(running);
-					cmbFace.setDisable(running);
-					
+					sliderX.setDisable(chkFixar.isSelected());
+					sliderY.setDisable(chkFixar.isSelected());
+					sliderAngle.setDisable(chkFixar.isSelected());
+					cmbFace.setDisable(chkFixar.isSelected());
+
+					btnAddConstraint.setDisable(running);
+					btnEditConstraint.setDisable(running);
+					btnRemoveConstraint.setDisable(running);
+
 					PrintWriter fileWriter = null;
-					
+
 					File dir = new File(Main.LOG_FOLDER);
-					
+
 					File file = new File(Main.LOG_FOLDER + "/" + Calendar.getInstance().getTimeInMillis() + "-execucao " + execution + ".log");
-					
+
 					try {
 						dir.mkdirs();
 						file.createNewFile();
@@ -308,15 +321,14 @@ public class FrmMainController implements Initializable {
 						durations.add(progressObserver.getDuration());
 						startAction(null);
 					} else {
-						
+
 						try {
-							fileWriter = new PrintWriter(new File(Main.LOG_FOLDER + "/" + Calendar.getInstance().getTimeInMillis()
-									+ " - Resultado  - " + optimizationAlgorithm.SIGLA + ".log"));
-							
+							fileWriter = new PrintWriter(new File(Main.LOG_FOLDER + "/" + Calendar.getInstance().getTimeInMillis() + " - Resultado  - " + optimizationAlgorithm.SIGLA + ".log"));
+
 							fileWriter.println("Resultados do algoritmo \"" + optimizationAlgorithm.NOME + "\" após " + execution + " execuções.");
 							fileWriter.println();
 							fileWriter.println("Soluções:");
-							
+
 							double totalFitness = 0;
 							double bestFitness = Double.MIN_VALUE;
 							double worstFitness = Double.MAX_VALUE;
@@ -344,13 +356,13 @@ public class FrmMainController implements Initializable {
 							fileWriter.println("Melhor Momento de inércia: " + bestSolution.getMomentOfInertia());
 							fileWriter.println("Melhor Centro de Massa: " + bestSolution.getMassCenter());
 							fileWriter.println();
-							
+
 							fileWriter.println();
 							fileWriter.println("Pior Solução: " + worstFitness);
 							fileWriter.println("Pior Momento de inércia: " + worstSolution.getMomentOfInertia());
 							fileWriter.println("Pior Centro de Massa: " + worstSolution.getMassCenter());
 							fileWriter.println();
-							
+
 							double media = totalFitness / solutions.size();
 							fileWriter.println("Média: " + media);
 							double desvioQuadrado = 0;
@@ -360,24 +372,24 @@ public class FrmMainController implements Initializable {
 							double variancia = desvioQuadrado / solutions.size();
 							double desvioPadrao = Math.sqrt(variancia);
 							fileWriter.println("Desvio padrão: " + desvioPadrao);
-							
+
 							long totalDuration = 0;
 							for (Long duration : durations) {
 								totalDuration += duration;
 							}
 							long avgDuration = totalDuration / durations.size();
 							fileWriter.println("Tempo médio: " + (avgDuration / 1000) + " segundos");
-							
+
 							fileWriter.close();
 						} catch (IOException ex) {
 							Logger.getLogger(FrmMainController.class.getName()).log(Level.SEVERE, null, ex);
 						}
-						
+
 						solutions.clear();
 						worstSolution = null;
 						durations.clear();
 						execution = 0;
-						
+
 					}
 				}
 			});
@@ -389,7 +401,7 @@ public class FrmMainController implements Initializable {
 			txtLog.appendText("A execução do algoritmo foi interrompida!\n");
 			execution = 0;
 		}
-		
+
 		txtHeight.setDisable(running);
 		txtWidth.setDisable(running);
 		cmbAlgorithm.setDisable(running);
@@ -397,29 +409,33 @@ public class FrmMainController implements Initializable {
 		btnEditItem.setDisable(running);
 		btnRemoveItem.setDisable(running);
 		btnAlgorithmParams.setDisable(running);
-		sliderX.setDisable(running);
-		sliderY.setDisable(running);
-		sliderAngle.setDisable(running);
 		chkFixar.setDisable(running);
-		cmbFace.setDisable(running);
+		sliderX.setDisable(chkFixar.isSelected());
+		sliderY.setDisable(chkFixar.isSelected());
+		sliderAngle.setDisable(chkFixar.isSelected());
+		cmbFace.setDisable(chkFixar.isSelected());
+
+		btnAddConstraint.setDisable(running);
+		btnEditConstraint.setDisable(running);
+		btnRemoveConstraint.setDisable(running);
 	}
-	
+
 	private void drawSolution() {
-		
+
 		if (solution == null) {
 			return;
 		}
-		
+
 		drawArea1.getChildren().clear();
 		drawArea2.getChildren().clear();
-		
+
 		double ws = drawArea1.getWidth() - 20;
 		double hs = drawArea1.getHeight() - 20;
 		double w = solution.getContainer().getWidth();
 		double h = solution.getContainer().getHeight();
 		double wTela, hTela, x, y;
 		double wEquipTela, hEquipTela, xEquip, yEquip;
-		
+
 		if (w / ws > h / hs) {
 			// usar horizontal como limite do retângulo maior
 			wTela = ws;
@@ -438,19 +454,19 @@ public class FrmMainController implements Initializable {
 		container1.setStrokeWidth(2);
 		container1.setStroke(Color.BLACK);
 		drawArea1.getChildren().add(container1);
-		
+
 		Rectangle container2 = new Rectangle(x, y, wTela, hTela);
 		container2.setFill(Color.gray(.93));
 		container2.setStrokeWidth(2);
 		container2.setStroke(Color.BLACK);
 		drawArea2.getChildren().add(container2);
-		
+
 		for (Equipment equipment : solution.getItems()) {
 			wEquipTela = equipment.getWidth() * wTela / w;
 			hEquipTela = equipment.getHeight() * hTela / h;
 			xEquip = x + equipment.getX() * wTela / w - wEquipTela / 2;
 			yEquip = y + (h - equipment.getY()) * hTela / h - hEquipTela / 2;
-			
+
 			Rectangle rect = new Rectangle(xEquip, yEquip, wEquipTela, hEquipTela);
 			rect.setRotate(-equipment.getAngle());
 			rect.setFill(equipment.getColor());
@@ -458,13 +474,13 @@ public class FrmMainController implements Initializable {
 			if (itemTable.getSelectionModel().getSelectedIndex() != -1 && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
 				rect.setStroke(Color.RED);
 				rect.setStrokeWidth(2);
-				
+
 				if (running) {
 					sliderX.setValue(equipment.getX());
 					sliderY.setValue(equipment.getY());
 					sliderAngle.setValue(equipment.getAngle());
 					chkFixar.setSelected(equipment.isFixed());
-					cmbFace.setValue(equipment.getFace()==2?"Face 2":"Face 1");
+					cmbFace.setValue(equipment.getFace() == 2 ? "Face 2" : "Face 1");
 				}
 			} else {
 				rect.setStroke(Color.BLACK);
@@ -474,26 +490,26 @@ public class FrmMainController implements Initializable {
 			if (equipment.getFace() == 2)
 				drawArea2.getChildren().add(rect);
 		}
-		
+
 		// centro de massa
 		double cX = x + (solution.getMassCenterX()) * wTela / w;
 		double cY = y + (h - solution.getMassCenterY()) * hTela / h;
-		
+
 		Circle centroDeMassa1 = new Circle(cX, cY, 3, Paint.valueOf("#FF3333"));
 		drawArea1.getChildren().add(centroDeMassa1);
 		Circle centroDeMassa2 = new Circle(cX, cY, 3, Paint.valueOf("#FF3333"));
 		drawArea2.getChildren().add(centroDeMassa2);
-		
+
 	}
-	
+
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 	}
-	
+
 	void setPrimaryStage(Stage stage) {
 		this.primaryStage = stage;
 	}
-	
+
 	void setContainer(Container container) {
 		if (container == null) {
 			return;
@@ -506,28 +522,44 @@ public class FrmMainController implements Initializable {
 		drawArea1.widthProperty().addListener(resizeListener);
 		drawArea1.heightProperty().addListener(resizeListener);
 		itemTable.getSelectionModel().selectedIndexProperty().addListener(resizeListener);
-		
+
 		itemTable.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
 				if (!running && solution != null) {
 					for (Equipment equipment : solution.getItems()) {
-						if (itemTable.getSelectionModel().getSelectedIndex() != -1
-								&& itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
+						if (itemTable.getSelectionModel().getSelectedIndex() != -1 && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
 							running = true;
 							sliderX.setValue(equipment.getX());
 							sliderY.setValue(equipment.getY());
 							sliderAngle.setValue(equipment.getAngle());
 							chkFixar.setSelected(equipment.isFixed());
-                            cmbFace.setValue(equipment.getFace()==2?"Face 2":"Face 1");
+							cmbFace.setValue(equipment.getFace() == 2 ? "Face 2" : "Face 1");
+
+							sliderX.setDisable(equipment.isFixed());
+							sliderY.setDisable(equipment.isFixed());
+							sliderAngle.setDisable(equipment.isFixed());
+							cmbFace.setDisable(equipment.isFixed());
+
 							running = false;
 							break;
 						}
 					}
 				}
+
+				if (!running && itemTable.getSelectionModel().getSelectedIndex() == -1) {
+					Equipment equipment = itemTable.getSelectionModel().getSelectedItem();
+					constraintsTable.getItems().clear();
+					constraintsTable.getItems().addAll(equipment.getConstraints());
+				}
+
+				btnAddConstraint.setDisable(!running && itemTable.getSelectionModel().getSelectedIndex() == -1);
+				btnEditConstraint.setDisable(!running && itemTable.getSelectionModel().getSelectedIndex() == -1);
+				btnRemoveConstraint.setDisable(!running && itemTable.getSelectionModel().getSelectedIndex() == -1);
+
 			}
 		});
-		
+
 		sliderX.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -538,17 +570,15 @@ public class FrmMainController implements Initializable {
 					if (itemTable.getSelectionModel().getSelectedIndex() != -1 && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
 						if (solution.validateAndAddItem(equipment, t1.doubleValue(), equipment.getY(), equipment.getAngle(), equipment.getFace())) {
 							drawSolution();
-							lblInfo.setText(String
-									.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}",
-											solution.getFitness(), solution.getMassCenter(), solution.getMassCenterX()
-													- solution.getContainer().getWidth() / 2, solution.getMassCenterY()
-													- solution.getContainer().getHeight() / 2, solution.getMomentOfInertia()));
+							lblInfo.setText(String.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", solution.getFitness(),
+									solution.getMassCenter(), solution.getMassCenterX() - solution.getContainer().getWidth() / 2, solution.getMassCenterY() - solution.getContainer().getHeight() / 2,
+									solution.getMomentOfInertia()));
 						}
 					}
 				}
 			}
 		});
-		
+
 		sliderY.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -559,17 +589,15 @@ public class FrmMainController implements Initializable {
 					if (itemTable.getSelectionModel().getSelectedIndex() != -1 && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
 						if (solution.validateAndAddItem(equipment, equipment.getX(), t1.doubleValue(), equipment.getAngle(), equipment.getFace())) {
 							drawSolution();
-							lblInfo.setText(String
-									.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}",
-											solution.getFitness(), solution.getMassCenter(), solution.getMassCenterX()
-													- solution.getContainer().getWidth() / 2, solution.getMassCenterY()
-													- solution.getContainer().getHeight() / 2, solution.getMomentOfInertia()));
+							lblInfo.setText(String.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", solution.getFitness(),
+									solution.getMassCenter(), solution.getMassCenterX() - solution.getContainer().getWidth() / 2, solution.getMassCenterY() - solution.getContainer().getHeight() / 2,
+									solution.getMomentOfInertia()));
 						}
 					}
 				}
 			}
 		});
-		
+
 		sliderAngle.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -581,17 +609,15 @@ public class FrmMainController implements Initializable {
 						if (solution.validateAndAddItem(equipment, equipment.getX(), equipment.getY(), t1.doubleValue(), equipment.getFace())) {
 							equipment.setAngle(t1.doubleValue());
 							drawSolution();
-							lblInfo.setText(String
-									.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}",
-											solution.getFitness(), solution.getMassCenter(), solution.getMassCenterX()
-													- solution.getContainer().getWidth() / 2, solution.getMassCenterY()
-													- solution.getContainer().getHeight() / 2, solution.getMomentOfInertia()));
+							lblInfo.setText(String.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", solution.getFitness(),
+									solution.getMassCenter(), solution.getMassCenterX() - solution.getContainer().getWidth() / 2, solution.getMassCenterY() - solution.getContainer().getHeight() / 2,
+									solution.getMomentOfInertia()));
 						}
 					}
 				}
 			}
 		});
-		
+
 		chkFixar.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
@@ -613,37 +639,33 @@ public class FrmMainController implements Initializable {
 				cmbFace.setDisable(t1.booleanValue());
 			}
 		});
-		
+
 		cmbFace.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                if (running || solution == null) {
-                    return;
-                }
-                for (Equipment equipment : solution.getItems()) {
-                    if (itemTable.getSelectionModel().getSelectedIndex() != -1
-                            && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
-                        if (solution.validateAndAddItem(equipment, equipment.getX(),
-                                equipment.getY(), equipment.getAngle(), cmbFace.getValue().equals("Face 2")?2:1)) {
-                            
-                            drawSolution();
-                            lblInfo.setText(String.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}",
-                                    solution.getFitness(), solution.getMassCenter(),
-                                    solution.getMassCenterX() - solution.getContainer().getWidth() / 2,
-                                    solution.getMassCenterY() - solution.getContainer().getHeight() / 2,
-                                    solution.getMomentOfInertia()));
-                        }
-                    }
-                }
-            }
-        });
-		
+			@Override
+			public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+				if (running || solution == null) {
+					return;
+				}
+				for (Equipment equipment : solution.getItems()) {
+					if (itemTable.getSelectionModel().getSelectedIndex() != -1 && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
+						if (solution.validateAndAddItem(equipment, equipment.getX(), equipment.getY(), equipment.getAngle(), t1.equals("Face 2") ? 2 : 1)) {
+
+							drawSolution();
+							lblInfo.setText(String.format("Solução alterada manualmente: %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", solution.getFitness(),
+									solution.getMassCenter(), solution.getMassCenterX() - solution.getContainer().getWidth() / 2, solution.getMassCenterY() - solution.getContainer().getHeight() / 2,
+									solution.getMomentOfInertia()));
+						}
+					}
+				}
+			}
+		});
+
 	}
-	
+
 	void setItems(List<Equipment> items) {
 		itemTable.getItems().addAll(items);
 	}
-	
+
 	private boolean validate() {
 		Container container = new Container(txtWidth.getNumber().doubleValue(), txtHeight.getNumber().doubleValue());
 		if (!container.validateParams()) {
@@ -652,19 +674,17 @@ public class FrmMainController implements Initializable {
 			return false;
 		}
 		if (itemTable.getItems().size() == 0) {
-			MessageBox.show(primaryStage, "É necessário ao menos um objeto para alocação!", "Lista de Objetos vazia", MessageBox.ICON_ERROR
-					| MessageBox.OK);
+			MessageBox.show(primaryStage, "É necessário ao menos um objeto para alocação!", "Lista de Objetos vazia", MessageBox.ICON_ERROR | MessageBox.OK);
 			btnAddItem.requestFocus();
 			return false;
 		}
 		solution = new Solution(container, itemTable.getItems());
 		if (!solution.validateParams()) {
-			MessageBox.show(primaryStage, "Os parâmetros da superfícies são incompatíveis com os objetos.", "Parâmetros inválidos",
-					MessageBox.ICON_ERROR | MessageBox.OK);
+			MessageBox.show(primaryStage, "Os parâmetros da superfícies são incompatíveis com os objetos.", "Parâmetros inválidos", MessageBox.ICON_ERROR | MessageBox.OK);
 			txtWidth.requestFocus();
 			return false;
 		}
-		
+
 		if (cmbAlgorithm.getSelectionModel().getSelectedIndex() == -1) {
 			MessageBox.show(primaryStage, "Selecione um algoritmo!", "Algoritmo não selecionado", MessageBox.ICON_ERROR | MessageBox.OK);
 			cmbAlgorithm.requestFocus();
@@ -696,7 +716,7 @@ public class FrmMainController implements Initializable {
 			optimizationAlgorithm = new MPCA(container, itemTable.getItems());
 			break;
 		}
-		
+
 		// configura a cor em escala de cinza de acordo com o peso do
 		// equipamento
 		double menorMassa = 0;
@@ -709,16 +729,44 @@ public class FrmMainController implements Initializable {
 				maiorMassa = item.getMass();
 			}
 		}
-		
+
 		for (Equipment item : itemTable.getItems()) {
 			double escala = item.getMass() / maiorMassa;
 			item.setColor(new Color(1 - escala, 1 - escala, 1 - escala, 1));
 		}
-		
+
 		return true;
 	}
-	
+
 	void setDefaultAlgorithm(String defaultAlgorithm) {
 		cmbAlgorithm.setValue(defaultAlgorithm);
 	}
+
+	@FXML
+	protected void addConstraintAction(ActionEvent event) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddConstraint.fxml"));
+		Parent root = (Parent) fxmlLoader.load();
+		FrmAddConstraintController myController = fxmlLoader.getController();
+		Scene scene = new Scene(root);
+
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Adicionar Restrição");
+		dialogStage.setResizable(false);
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(primaryStage);
+		dialogStage.setScene(scene);
+		myController.setStage(dialogStage);
+		dialogStage.showAndWait();
+	}
+
+	@FXML
+	protected void editConstraintAction(ActionEvent event) throws IOException {
+
+	}
+
+	@FXML
+	protected void removeConstraintAction(ActionEvent event) {
+
+	}
+
 }
