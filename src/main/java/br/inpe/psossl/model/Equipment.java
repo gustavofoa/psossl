@@ -211,4 +211,13 @@ public class Equipment {
 			this.constraints.remove(constraint);
 	}
 
+	public double distanceTo(double x2, double y2) {
+
+		double x1 = this.getX();
+		double y1 = this.getY();
+
+		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+
+	}
+
 }

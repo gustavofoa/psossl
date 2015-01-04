@@ -6,24 +6,25 @@ import static java.lang.Math.sin;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.inpe.psossl.model.Constraint.Type;
+
 public class Solution {
 
-	private Container container;
-	private List<Equipment> items;
-	private double massCenterX;
-	private double massCenterY;
-	private double massCenter;
-	private double momentOfInertia;
-	public static double LAMBDA1 = 1;
-	public static double LAMBDA2 = 1;
+	private Container		container;
+	private List<Equipment>	items;
+	private double			massCenterX;
+	private double			massCenterY;
+	private double			massCenter;
+	private double			momentOfInertia;
+	public static double	LAMBDA1	= 1;
+	public static double	LAMBDA2	= 1;
 
 	public Solution(Container container, List<Equipment> items) {
 		this.container = container;
 		this.items = items;
 	}
 
-	public Solution(Container container, List<Equipment> items,
-			boolean onlyFixeds) {
+	public Solution(Container container, List<Equipment> items, boolean onlyFixeds) {
 		this.container = container;
 		this.items = new ArrayList<Equipment>();
 		if (onlyFixeds)
@@ -60,8 +61,7 @@ public class Solution {
 		return true;
 	}
 
-	public boolean validateAndAddItem(Equipment equipment, double x, double y,
-			double angle, int face) {
+	public boolean validateAndAddItem(Equipment equipment, double x, double y, double angle, int face) {
 
 		if (face != 1 && face != 2)
 			return false;
@@ -71,24 +71,13 @@ public class Solution {
 		double teta = Math.toRadians(angle);
 
 		// obtain the rectangle vertices
-		double vertices[][] = new double[][] {
-				new double[] {
-						(cos(teta) * (-h / 2)) + (-sin(teta) * (-v / 2)) + x,
-						(sin(teta) * (-h / 2)) + (cos(teta) * (-v / 2)) + y },
-				new double[] {
-						(cos(teta) * (h / 2)) + (-sin(teta) * (-v / 2)) + x,
-						(sin(teta) * (h / 2)) + (cos(teta) * (-v / 2)) + y },
-				new double[] {
-						(cos(teta) * (h / 2)) + (-sin(teta) * (v / 2)) + x,
-						(sin(teta) * (h / 2)) + (cos(teta) * (v / 2)) + y },
-				new double[] {
-						(cos(teta) * (-h / 2)) + (-sin(teta) * (v / 2)) + x,
-						(sin(teta) * (-h / 2)) + (cos(teta) * (v / 2)) + y } };
+		double vertices[][] = new double[][] { new double[] { (cos(teta) * (-h / 2)) + (-sin(teta) * (-v / 2)) + x, (sin(teta) * (-h / 2)) + (cos(teta) * (-v / 2)) + y },
+				new double[] { (cos(teta) * (h / 2)) + (-sin(teta) * (-v / 2)) + x, (sin(teta) * (h / 2)) + (cos(teta) * (-v / 2)) + y },
+				new double[] { (cos(teta) * (h / 2)) + (-sin(teta) * (v / 2)) + x, (sin(teta) * (h / 2)) + (cos(teta) * (v / 2)) + y },
+				new double[] { (cos(teta) * (-h / 2)) + (-sin(teta) * (v / 2)) + x, (sin(teta) * (-h / 2)) + (cos(teta) * (v / 2)) + y } };
 		// validating if the rectangle is inside the container
 		for (double[] vertice : vertices) {
-			if (vertice[0] < 0 || vertice[1] < 0
-					|| vertice[0] > container.getWidth()
-					|| vertice[1] > container.getHeight()) {
+			if (vertice[0] < 0 || vertice[1] < 0 || vertice[0] > container.getWidth() || vertice[1] > container.getHeight()) {
 				return false;
 			}
 		}
@@ -100,32 +89,10 @@ public class Solution {
 				double teta2 = Math.toRadians(item.getAngle());
 				double v2 = item.getHeight(), h2 = item.getWidth();
 				double vertices2[][] = new double[][] {
-						new double[] {
-								(cos(teta2) * (-h2 / 2))
-										+ (-sin(teta2) * (-v2 / 2))
-										+ item.getX(),
-								(sin(teta2) * (-h2 / 2))
-										+ (cos(teta2) * (-v2 / 2))
-										+ item.getY() },
-						new double[] {
-								(cos(teta2) * (h2 / 2))
-										+ (-sin(teta2) * (-v2 / 2))
-										+ item.getX(),
-								(sin(teta2) * (h2 / 2))
-										+ (cos(teta2) * (-v2 / 2))
-										+ item.getY() },
-						new double[] {
-								(cos(teta2) * (h2 / 2))
-										+ (-sin(teta2) * (v2 / 2))
-										+ item.getX(),
-								(sin(teta2) * (h2 / 2))
-										+ (cos(teta2) * (v2 / 2)) + item.getY() },
-						new double[] {
-								(cos(teta2) * (-h2 / 2))
-										+ (-sin(teta2) * (v2 / 2))
-										+ item.getX(),
-								(sin(teta2) * (-h2 / 2))
-										+ (cos(teta2) * (v2 / 2)) + item.getY() } };
+						new double[] { (cos(teta2) * (-h2 / 2)) + (-sin(teta2) * (-v2 / 2)) + item.getX(), (sin(teta2) * (-h2 / 2)) + (cos(teta2) * (-v2 / 2)) + item.getY() },
+						new double[] { (cos(teta2) * (h2 / 2)) + (-sin(teta2) * (-v2 / 2)) + item.getX(), (sin(teta2) * (h2 / 2)) + (cos(teta2) * (-v2 / 2)) + item.getY() },
+						new double[] { (cos(teta2) * (h2 / 2)) + (-sin(teta2) * (v2 / 2)) + item.getX(), (sin(teta2) * (h2 / 2)) + (cos(teta2) * (v2 / 2)) + item.getY() },
+						new double[] { (cos(teta2) * (-h2 / 2)) + (-sin(teta2) * (v2 / 2)) + item.getX(), (sin(teta2) * (-h2 / 2)) + (cos(teta2) * (v2 / 2)) + item.getY() } };
 				if (isPolygonsIntersecting(vertices, vertices2)) {
 					return false;
 				}
@@ -133,9 +100,29 @@ public class Solution {
 			}
 		}
 
-		Equipment equip = new Equipment(equipment.getId(),
-				equipment.getWidth(), equipment.getHeight(),
-				equipment.getMass(), equipment.getColor());
+		// Constraints
+		for (Constraint constraint : equipment.getConstraints()) {
+			
+			if (constraint.getType() == Type.Face && constraint.getFace() != face)
+				return false;
+			
+			if(constraint.getType() == Type.Min){
+				if(constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) < constraint.getDistance())
+					return false;
+				if(constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) < constraint.getDistance())
+					return false;
+			}
+
+			if(constraint.getType() == Type.Max){
+				if(constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) > constraint.getDistance())
+					return false;
+				if(constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) > constraint.getDistance())
+					return false;
+			}
+			
+		}
+
+		Equipment equip = new Equipment(equipment.getId(), equipment.getWidth(), equipment.getHeight(), equipment.getMass(), equipment.getColor());
 		equip.setX(x);
 		equip.setY(y);
 		equip.setAngle(angle);
@@ -212,29 +199,24 @@ public class Solution {
 		return true;
 	}
 
-	private Double fitness;
+	private Double	fitness;
 
 	public double getFitness() {
 
 		double sumMX = .0, sumMY = .0, sumM = .0;
 		for (Equipment equipment : items) {
-			sumMX += equipment.getMass()
-					* (equipment.getX() - container.getWidth() / 2);
-			sumMY += equipment.getMass()
-					* (equipment.getY() - container.getHeight() / 2);
+			sumMX += equipment.getMass() * (equipment.getX() - container.getWidth() / 2);
+			sumMY += equipment.getMass() * (equipment.getY() - container.getHeight() / 2);
 			sumM += equipment.getMass();
 		}
 		massCenterX = sumMX + container.getWidth() / 2;
 		massCenterY = sumMY + container.getHeight() / 2;
-		massCenter = Math.sqrt(Math.pow(sumMX / sumM, 2)
-				+ Math.pow(sumMY / sumM, 2));
+		massCenter = Math.sqrt(Math.pow(sumMX / sumM, 2) + Math.pow(sumMY / sumM, 2));
 
 		momentOfInertia = 0;
 		double r;
 		for (Equipment equipment : items) {
-			r = Math.sqrt(Math.pow(equipment.getX() - container.getWidth() / 2,
-					2)
-					+ Math.pow(equipment.getY() - container.getHeight() / 2, 2));
+			r = Math.sqrt(Math.pow(equipment.getX() - container.getWidth() / 2, 2) + Math.pow(equipment.getY() - container.getHeight() / 2, 2));
 			momentOfInertia += equipment.getMass() * Math.pow(r, 2);
 		}
 
