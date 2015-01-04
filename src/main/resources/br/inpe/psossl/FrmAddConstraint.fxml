@@ -10,28 +10,28 @@
 <?import javafx.scene.layout.*?>
 <?scenebuilder-classpath-element ../../../../build/classes?>
 
-<AnchorPane id="AnchorPane" prefHeight="230.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.FrmAddConstraintController">
+<AnchorPane id="AnchorPane" prefHeight="230.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.FrmAddConstraintController">
   <children>
-    <GridPane alignment="CENTER" hgap="10.0" layoutX="38.0" layoutY="14.0" prefWidth="273.0" vgap="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+    <GridPane alignment="CENTER" hgap="10.0" layoutX="20.0" layoutY="14.0" vgap="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
       <children>
-        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Objeto Referência:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0">
           <GridPane.margin>
             <Insets bottom="20.0" right="10.0" top="20.0" fx:id="x1" />
           </GridPane.margin>
         </Label>
-        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tipo:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="1" />
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Objeto Referência:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="1" />
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Distância:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="2" />
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Face:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="3" />
-        <ComboBox fx:id="cmbRerefence" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="0">
-        </ComboBox>
-        <ComboBox fx:id="cmbTipo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="1">
+        <ComboBox fx:id="cmbTipo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="0">
             <items>
               <FXCollections fx:factory="observableArrayList">
-               <String fx:value="Mínimo" />
-               <String fx:value="Máximo" />
-               <String fx:value="Face" />
+               <String fx:value="Distância Mínima" />
+               <String fx:value="Distância Máxima" />
+               <String fx:value="Face da Prateleira" />
               </FXCollections>
             </items>
+        </ComboBox>
+        <ComboBox fx:id="cmbRerefence" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="1">
         </ComboBox>
         <NumberTextField fx:id="txtDistance" disable="true" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <ComboBox fx:id="cmbFace" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="3">
@@ -47,7 +47,7 @@
       </children>
       <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="145.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
       </columnConstraints>
       <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

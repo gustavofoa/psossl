@@ -7,9 +7,19 @@ public class Constraint {
 	private Type		type;
 	private double		distance;
 	private int			face;
+	
+	private Equipment mainEquipment;
 
 	public enum Type {
 		Min, Max, Face
+	}
+
+	public Constraint(Equipment equipment, Equipment reference, Type type, double distance, int face) {
+		this.equipment1 = equipment;
+		this.equipment2 = reference;
+		this.type = type;
+		this.distance = distance;
+		this.face = face;
 	}
 
 	public Equipment getEquipment1() {
@@ -61,6 +71,20 @@ public class Constraint {
 			return "Face " + face;
 		else
 			return "";
+	}
+	
+	public String getReference(){
+		if(type == Type.Face)
+			return " - ";
+		if(equipment1.equals(mainEquipment))
+			return equipment2.getId() + ": " + equipment2.getWidth() + ", " + equipment2.getHeight() + " - " + equipment2.getMass();
+		else if(equipment2.equals(mainEquipment))
+			return equipment1.getId() + ": " + equipment1.getWidth() + ", " + equipment1.getHeight() + " - " + equipment1.getMass();
+		return "";
+	}
+
+	public void setMainEquipment(Equipment equipment) {
+		this.mainEquipment = equipment;
 	}
 
 }

@@ -125,7 +125,6 @@ public class FrmMainController implements Initializable {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddItem.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddItemController myController = fxmlLoader.getController();
-		myController.setPrimaryStage(primaryStage);
 		Scene scene = new Scene(root);
 
 		Stage dialogStage = new Stage();
@@ -150,7 +149,6 @@ public class FrmMainController implements Initializable {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddItem.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddItemController myController = fxmlLoader.getController();
-		myController.setPrimaryStage(primaryStage);
 		Scene scene = new Scene(root);
 
 		Stage dialogStage = new Stage();
@@ -176,6 +174,7 @@ public class FrmMainController implements Initializable {
 		}
 		itemTable.getColumns().get(0).setVisible(false);
 		itemTable.getColumns().get(0).setVisible(true);
+
 	}
 
 	@FXML
@@ -547,17 +546,15 @@ public class FrmMainController implements Initializable {
 					}
 				}
 
-				if (!running && itemTable.getSelectionModel().getSelectedIndex() == -1) {
-					Equipment equipment = itemTable.getSelectionModel().getSelectedItem();
-					constraintsTable.getItems().clear();
-					constraintsTable.getItems().addAll(equipment.getConstraints());
-				}
+				if (!running && itemTable.getSelectionModel().getSelectedIndex() != -1)
+					refreshConstraintsTable();
 
 				btnAddConstraint.setDisable(!running && itemTable.getSelectionModel().getSelectedIndex() == -1);
 				btnEditConstraint.setDisable(!running && itemTable.getSelectionModel().getSelectedIndex() == -1);
 				btnRemoveConstraint.setDisable(!running && itemTable.getSelectionModel().getSelectedIndex() == -1);
 
 			}
+
 		});
 
 		sliderX.valueProperty().addListener(new ChangeListener<Number>() {
@@ -748,7 +745,7 @@ public class FrmMainController implements Initializable {
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddConstraintController myController = fxmlLoader.getController();
 		Scene scene = new Scene(root);
-		
+
 		myController.setEquipment(itemTable.getSelectionModel().getSelectedItem());
 		myController.setReferences(itemTable.getItems());
 
@@ -760,16 +757,65 @@ public class FrmMainController implements Initializable {
 		dialogStage.setScene(scene);
 		myController.setStage(dialogStage);
 		dialogStage.showAndWait();
+
+		refreshConstraintsTable();
+
 	}
 
 	@FXML
 	protected void editConstraintAction(ActionEvent event) throws IOException {
+
+		if (constraintsTable.getSelectionModel().getSelectedItem() == null) {
+			MessageBox.show(primaryStage, "Selecione uma restrição para editar!", "Não há restrição selecionada", MessageBox.ICON_ERROR | MessageBox.OK);
+			return;
+		}
+
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddConstraint.fxml"));
+		Parent root = (Parent) fxmlLoader.load();
+		FrmAddConstraintController myController = fxmlLoader.getController();
+		Scene scene = new Scene(root);
+
+		myController.setEquipment(itemTable.getSelectionModel().getSelectedItem());
+		myController.setReferences(itemTable.getItems());
+
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Editar Restrição");
+		dialogStage.setResizable(false);
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(primaryStage);
+		dialogStage.setScene(scene);
+		myController.setStage(dialogStage);
+		myController.setConstraint(constraintsTable.getSelectionModel().getSelectedItem());
+
+		dialogStage.showAndWait();
+		// refresh table
+		refreshConstraintsTable();
 
 	}
 
 	@FXML
 	protected void removeConstraintAction(ActionEvent event) {
 
+		if (constraintsTable.getSelectionModel().getSelectedItem() == null) {
+			MessageBox.show(primaryStage, "Selecione uma restrição para remover!", "Não há restrição selecionada", MessageBox.ICON_ERROR | MessageBox.OK);
+			return;
+		}
+
+		Equipment equipment = itemTable.getSelectionModel().getSelectedItem();
+		equipment.removeConstraint(constraintsTable.getSelectionModel().getSelectedItem());
+
+		refreshConstraintsTable();
+
+	}
+
+	private void refreshConstraintsTable() {
+		Equipment equipment = itemTable.getSelectionModel().getSelectedItem();
+
+		for (Constraint constraint : equipment.getConstraints())
+			constraint.setMainEquipment(equipment);
+
+		constraintsTable.getItems().clear();
+		constraintsTable.getItems().addAll(equipment.getConstraints());
 	}
 
 }

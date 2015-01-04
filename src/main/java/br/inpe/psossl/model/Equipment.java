@@ -2,7 +2,9 @@ package br.inpe.psossl.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.paint.Color;
+import br.inpe.psossl.model.Constraint.Type;
 
 public class Equipment {
 
@@ -50,6 +52,8 @@ public class Equipment {
 		this.height = height;
 		this.mass = mass;
 		this.color = color;
+		if (this.constraints == null)
+			this.constraints = new ArrayList<Constraint>();
 	}
 
 	public List<EquipmentRelationship> getRelationships() {
@@ -183,6 +187,28 @@ public class Equipment {
 
 	public List<Constraint> getConstraints() {
 		return constraints;
+	}
+
+	public void addConstraint(Equipment reference, Type type, double distance, int face) {
+
+		for (Constraint constraint : constraints)
+			if ((constraint.getEquipment1() == reference || constraint.getEquipment2() == reference) && type == constraint.getType())
+				return;
+
+		Constraint constraint = new Constraint(this, reference, type, distance, face);
+
+		this.constraints.add(constraint);
+		if (reference != null)
+			reference.getConstraints().add(constraint);
+
+	}
+
+	public void removeConstraint(Constraint constraint) {
+		if (constraint.getType() != Type.Face) {
+			constraint.getEquipment1().getConstraints().remove(constraint);
+			constraint.getEquipment2().getConstraints().remove(constraint);
+		} else
+			this.constraints.remove(constraint);
 	}
 
 }
