@@ -42,8 +42,11 @@
     "LAMBDA1": 10000,
     "LAMBDA2": 1,
     "EXECUCOES": 25,
-    "LOG_FOLDER": "/tmp/psossl/resultados",
-    "SEED": 98456,
+    "LOG_FOLDER": "/tmp/psossl/resultados/8_items/random",
+    "SEED": 321578,
+    "RandomParams":{
+        "ITERACOES": 10000
+    },
     "ACOParams":{
         "ALPHA": 1,
         "BETA": 1,
@@ -51,5 +54,11 @@
         "Q0": 0.2,
         "ITERACOES": 1000,
         "FORMIGAS": 10
+    },
+    "HBAEParams":{
+    	"ITERACOES": "1000",
+    	"REFORCO": "1.01",
+    	"DECAIMENTO": "0.99",
+    	"AGENTES": "10"
     }
 }

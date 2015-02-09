@@ -1,4 +1,4 @@
-package br.inpe.psossl;
+package br.inpe.psossl.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,18 +38,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import br.inpe.psossl.algorithm.ACOAlgorithm;
-import br.inpe.psossl.algorithm.ACOdAlgorithm;
-import br.inpe.psossl.algorithm.ConstructiveAlgorithm;
-import br.inpe.psossl.algorithm.GEOAlgorithm;
-import br.inpe.psossl.algorithm.MPCA;
-import br.inpe.psossl.algorithm.OptimizationAlgorithm;
-import br.inpe.psossl.model.Constraint;
-import br.inpe.psossl.model.Container;
-import br.inpe.psossl.model.Equipment;
-import br.inpe.psossl.model.Solution;
-import br.inpe.psossl.ux.MessageBox;
-import br.inpe.psossl.ux.NumberTextField;
+import br.inpe.psossl.Main;
+import br.inpe.psossl.ProgressObserver;
+import br.inpe.psossl.algorithm.*;
+import br.inpe.psossl.algorithm.HBAE.Type;
+import br.inpe.psossl.controller.params.FrmParamsController;
+import br.inpe.psossl.model.*;
+import br.inpe.psossl.ux.*;
 
 /**
  * 
@@ -146,7 +141,7 @@ public class FrmMainController implements Initializable {
 			return;
 		}
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddItem.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/FrmAddItem.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddItemController myController = fxmlLoader.getController();
 		Scene scene = new Scene(root);
@@ -199,22 +194,40 @@ public class FrmMainController implements Initializable {
 		}
 
 		FXMLLoader fxmlLoader = null;
-
+		
 		switch (cmbAlgorithm.getSelectionModel().getSelectedItem()) {
-		case "ACO":
-		case "ACO (Com afinidade entre equipamentos I)":
-		case "ACO (Com afinidade entre equipamentos II)":
-		case "ACO-d":
-		case "ACO-d (Com afinidade entre equipamentos I)":
-		case "ACO-d (Com afinidade entre equipamentos II)":
-			fxmlLoader = new FXMLLoader(getClass().getResource("FrmACOParams.fxml"));
+		case "Aleatório":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmRandomParams.fxml"));
 			break;
-		case "GEO":
-			// fxmlLoader = new
-			// FXMLLoader(getClass().getResource("FrmACOParams.fxml"));
+		case "ACO":
+		case "ACO-d":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmACOParams.fxml"));
+			break;
+		case "HBAE-I":
+		case "HBAE-II":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmHBAEParams.fxml"));
 			break;
 		case "MPCA":
-			fxmlLoader = new FXMLLoader(getClass().getResource("FrmMPCAParams.fxml"));
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmMPCAParams.fxml"));
+			break;
+		case "ACO + HBAE-I":
+		case "ACO + HBAE-II":
+		case "ACO-d + HBAE-I":
+		case "ACO-d + HBAE-II":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmACOHBAEParams.fxml"));
+			break;
+		case "ACO + MPCA":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmACOMPCAParams.fxml"));
+			break;
+		case "HBAE-I + MPCA":
+		case "HBAE-II + MPCA":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmHBAEMPCAParams.fxml"));
+			break;
+		case "ACO + HBAE-I + MPCA":
+		case "ACO + HBAE-II + MPCA":
+		case "ACO-d + HBAE-I + MPCA":
+		case "ACO-d + HBAE-II + MPCA":
+			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmACOHBAEMPCAParams.fxml"));
 			break;
 		}
 
@@ -316,7 +329,7 @@ public class FrmMainController implements Initializable {
 					if (worstSolution == null || worstSolution.getFitness() > optimizationAlgorithm.getWorstSolution().getFitness()) {
 						worstSolution = optimizationAlgorithm.getWorstSolution();
 					}
-					if (execution < Main.EXECUCOES) {
+					if (execution < OptimizationAlgorithm.EXECUCOES) {
 						durations.add(progressObserver.getDuration());
 						startAction(null);
 					} else {
@@ -324,9 +337,8 @@ public class FrmMainController implements Initializable {
 						try {
 							fileWriter = new PrintWriter(new File(Main.LOG_FOLDER + "/" + Calendar.getInstance().getTimeInMillis() + " - Resultado  - " + optimizationAlgorithm.SIGLA + ".log"));
 
-							fileWriter.println("Resultados do algoritmo \"" + optimizationAlgorithm.NOME + "\" após " + execution + " execuções.");
+							fileWriter.println("Algoritmo \"" + optimizationAlgorithm.NOME + "\" após " + execution + " execuções.");
 							fileWriter.println();
-							fileWriter.println("Soluções:");
 
 							double totalFitness = 0;
 							double bestFitness = Double.MIN_VALUE;
@@ -335,32 +347,20 @@ public class FrmMainController implements Initializable {
 							Solution worstSolution = null;
 							double fitness;
 							int i = 0;
+							StringBuffer strSolutions = new StringBuffer();
 							for (Solution solution : solutions) {
-								fileWriter.println((++i) + " - " + solution);
+								strSolutions.append((++i) + " - " + solution);
 								fitness = solution.getFitness();
 								totalFitness += fitness;
-								if (fitness > bestFitness) {
+								if (fitness > bestFitness || bestSolution==null) {
 									bestFitness = fitness;
 									bestSolution = solution;
 								}
-								if (fitness < worstFitness) {
+								if (fitness < worstFitness || worstSolution==null) {
 									worstFitness = fitness;
 									worstSolution = solution;
 								}
 							}
-							fileWriter.println();
-							fileWriter.println("Algoritmo \"" + optimizationAlgorithm.NOME + "\" após " + execution + " execuções.");
-							fileWriter.println();
-							fileWriter.println("Melhor Solução: " + bestFitness);
-							fileWriter.println("Melhor Momento de inércia: " + bestSolution.getMomentOfInertia());
-							fileWriter.println("Melhor Centro de Massa: " + bestSolution.getMassCenter());
-							fileWriter.println();
-
-							fileWriter.println();
-							fileWriter.println("Pior Solução: " + worstFitness);
-							fileWriter.println("Pior Momento de inércia: " + worstSolution.getMomentOfInertia());
-							fileWriter.println("Pior Centro de Massa: " + worstSolution.getMassCenter());
-							fileWriter.println();
 
 							double media = totalFitness / solutions.size();
 							fileWriter.println("Média: " + media);
@@ -378,6 +378,21 @@ public class FrmMainController implements Initializable {
 							}
 							long avgDuration = totalDuration / durations.size();
 							fileWriter.println("Tempo médio: " + (avgDuration / 1000) + " segundos");
+							fileWriter.println();
+							
+							fileWriter.println();
+							fileWriter.println("Melhor Solução: " + bestFitness);
+							fileWriter.println("Melhor Momento de inércia: " + bestSolution.getMomentOfInertia());
+							fileWriter.println("Melhor Centro de Massa: " + bestSolution.getMassCenter());
+
+							fileWriter.println();
+							fileWriter.println("Pior Solução: " + worstFitness);
+							fileWriter.println("Pior Momento de inércia: " + worstSolution.getMomentOfInertia());
+							fileWriter.println("Pior Centro de Massa: " + worstSolution.getMassCenter());
+							fileWriter.println();
+
+							fileWriter.println("Soluções:");
+							fileWriter.println(strSolutions);
 
 							fileWriter.close();
 						} catch (IOException ex) {
@@ -505,11 +520,11 @@ public class FrmMainController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 	}
 
-	void setPrimaryStage(Stage stage) {
+	public void setPrimaryStage(Stage stage) {
 		this.primaryStage = stage;
 	}
 
-	void setContainer(Container container) {
+	public void setContainer(Container container) {
 		if (container == null) {
 			return;
 		}
@@ -659,7 +674,7 @@ public class FrmMainController implements Initializable {
 
 	}
 
-	void setItems(List<Equipment> items) {
+	public void setItems(List<Equipment> items) {
 		itemTable.getItems().addAll(items);
 	}
 
@@ -687,30 +702,58 @@ public class FrmMainController implements Initializable {
 			cmbAlgorithm.requestFocus();
 			return false;
 		}
+		
 		switch (cmbAlgorithm.getSelectionModel().getSelectedItem()) {
+		case "Aleatório":
+			optimizationAlgorithm = new RandomAlgorithm(container, itemTable.getItems());
+			break;
 		case "ACO":
-			optimizationAlgorithm = new ACOAlgorithm(container, itemTable.getItems(), ConstructiveAlgorithm.Type.NORMAL);
-			break;
-		case "ACO (Com afinidade entre equipamentos I)":
-			optimizationAlgorithm = new ACOAlgorithm(container, itemTable.getItems(), ConstructiveAlgorithm.Type.WITH_EQUIPMENT_RELATIONSHIP_I);
-			break;
-		case "ACO (Com afinidade entre equipamentos II)":
-			optimizationAlgorithm = new ACOAlgorithm(container, itemTable.getItems(), ConstructiveAlgorithm.Type.WITH_EQUIPMENT_RELATIONSHIP_II);
+			optimizationAlgorithm = new ACO(container, itemTable.getItems());
 			break;
 		case "ACO-d":
-			optimizationAlgorithm = new ACOdAlgorithm(container, itemTable.getItems(), ConstructiveAlgorithm.Type.NORMAL);
+			optimizationAlgorithm = new ACOd(container, itemTable.getItems());
 			break;
-		case "ACO-d (Com afinidade entre equipamentos I)":
-			optimizationAlgorithm = new ACOdAlgorithm(container, itemTable.getItems(), ConstructiveAlgorithm.Type.WITH_EQUIPMENT_RELATIONSHIP_I);
+		case "HBAE-I":
+			optimizationAlgorithm = new HBAE(container, itemTable.getItems(), Type.I);
 			break;
-		case "ACO-d (Com afinidade entre equipamentos II)":
-			optimizationAlgorithm = new ACOdAlgorithm(container, itemTable.getItems(), ConstructiveAlgorithm.Type.WITH_EQUIPMENT_RELATIONSHIP_II);
-			break;
-		case "GEO":
-			optimizationAlgorithm = new GEOAlgorithm(container, itemTable.getItems());
+		case "HBAE-II":
+			optimizationAlgorithm = new HBAE(container, itemTable.getItems(), Type.II);
 			break;
 		case "MPCA":
 			optimizationAlgorithm = new MPCA(container, itemTable.getItems());
+			break;
+		case "ACO + HBAE-I":
+			optimizationAlgorithm = new ACOHBAE(container, itemTable.getItems(), Type.I);
+			break;
+		case "ACO + HBAE-II":
+			optimizationAlgorithm = new ACOHBAE(container, itemTable.getItems(), Type.II);
+			break;
+		case "ACO-d + HBAE-I":
+			optimizationAlgorithm = new ACOdHBAE(container, itemTable.getItems(), Type.I);
+			break;
+		case "ACO-d + HBAE-II":
+			optimizationAlgorithm = new ACOdHBAE(container, itemTable.getItems(), Type.II);
+			break;
+		case "ACO + MPCA":
+			optimizationAlgorithm = new ACOMPCA(container, itemTable.getItems());
+			break;
+		case "HBAE-I + MPCA":
+			optimizationAlgorithm = new HBAEMPCA(container, itemTable.getItems(), Type.I);
+			break;
+		case "HBAE-II + MPCA":
+			optimizationAlgorithm = new HBAEMPCA(container, itemTable.getItems(), Type.II);
+			break;
+		case "ACO + HBAE-I + MPCA":
+			optimizationAlgorithm = new ACOHBAEMPCA(container, itemTable.getItems(), Type.I);
+			break;
+		case "ACO + HBAE-II + MPCA":
+			optimizationAlgorithm = new ACOHBAEMPCA(container, itemTable.getItems(), Type.II);
+			break;
+		case "ACO-d + HBAE-I + MPCA":
+			optimizationAlgorithm = new ACOdHBAEMPCA(container, itemTable.getItems(), Type.I);
+			break;
+		case "ACO-d + HBAE-II + MPCA":
+			optimizationAlgorithm = new ACOdHBAEMPCA(container, itemTable.getItems(), Type.II);
 			break;
 		}
 
@@ -735,13 +778,13 @@ public class FrmMainController implements Initializable {
 		return true;
 	}
 
-	void setDefaultAlgorithm(String defaultAlgorithm) {
+	public void setDefaultAlgorithm(String defaultAlgorithm) {
 		cmbAlgorithm.setValue(defaultAlgorithm);
 	}
 
 	@FXML
 	protected void addConstraintAction(ActionEvent event) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddConstraint.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/FrmAddConstraint.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddConstraintController myController = fxmlLoader.getController();
 		Scene scene = new Scene(root);
@@ -770,7 +813,7 @@ public class FrmMainController implements Initializable {
 			return;
 		}
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddConstraint.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/FrmAddConstraint.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddConstraintController myController = fxmlLoader.getController();
 		Scene scene = new Scene(root);

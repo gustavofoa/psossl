@@ -1,0 +1,68 @@
+{
+    "container": {
+        "width": 100,
+        "height": 100
+    },
+    "items": [
+        {
+            "width": 8,
+            "height": 6,
+            "mass": 12
+        },{
+            "width": 8,
+            "height": 8,
+            "mass": 16
+        },{
+            "width": 10,
+            "height": 6,
+            "mass": 15
+        },{
+            "width": 10,
+            "height": 8,
+            "mass": 20
+        },{
+            "width": 10,
+            "height": 10,
+            "mass": 25
+        },{
+            "width": 12,
+            "height": 6,
+            "mass": 18
+        },{
+            "width": 12,
+            "height": 4,
+            "mass": 12
+        },{
+            "width": 12,
+            "height": 8,
+            "mass": 24
+        },{
+            "width": 12,
+            "height": 10,
+            "mass": 30
+        }
+    ],
+    "defaultAlgorithm": "Aleatório",
+    "LAMBDA1": 10000,
+    "LAMBDA2": 1,
+    "EXECUCOES": 25,
+    "LOG_FOLDER": "/tmp/psossl/resultados/9_items/random",
+    "SEED": 2198375,
+    "RandomParams":{
+        "ITERACOES": 100000
+    },
+    "ACOParams":{
+        "ALPHA": 1,
+        "BETA": 1,
+        "TAXA_DECAIMENTO": 0.9,
+        "Q0": 0.2,
+        "ITERACOES": 10000,
+        "FORMIGAS": 10
+    },
+    "HBAEParams":{
+    	"ITERACOES": "10000",
+    	"REFORCO": "1.01",
+    	"DECAIMENTO": "0.99",
+    	"AGENTES": "10"
+    }
+}

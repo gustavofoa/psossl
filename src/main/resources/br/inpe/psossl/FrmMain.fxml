@@ -11,7 +11,7 @@
 <?import javafx.scene.paint.*?>
 <?scenebuilder-classpath-element ../../../../build/classes?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.FrmMainController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.controller.FrmMainController">
   <children>
     <BorderPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <bottom>
@@ -253,14 +253,23 @@
                         <ComboBox fx:id="cmbAlgorithm" prefHeight="21.0" prefWidth="300.0">
                           <items>
                             <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="Aleatório" />
                               <String fx:value="ACO" />
-                              <String fx:value="ACO (Com afinidade entre equipamentos I)" />
-                              <String fx:value="ACO (Com afinidade entre equipamentos II)" />
                               <String fx:value="ACO-d" />
-                              <String fx:value="ACO-d (Com afinidade entre equipamentos I)" />
-                              <String fx:value="ACO-d (Com afinidade entre equipamentos II)" />
-                              <String fx:value="GEO" />
+                              <String fx:value="HBAE-I" />
+                              <String fx:value="HBAE-II" />
                               <String fx:value="MPCA" />
+                              <String fx:value="ACO + HBAE-I" />
+                              <String fx:value="ACO + HBAE-II" />
+                              <String fx:value="ACO-d + HBAE-I" />
+                              <String fx:value="ACO-d + HBAE-II" />
+                              <String fx:value="ACO + MPCA" />
+                              <String fx:value="HBAE-I + MPCA" />
+                              <String fx:value="HBAE-II + MPCA" />
+                              <String fx:value="ACO + HBAE-I + MPCA" />
+                              <String fx:value="ACO + HBAE-II + MPCA" />
+                              <String fx:value="ACO-d + HBAE-I + MPCA" />
+                              <String fx:value="ACO-d + HBAE-II + MPCA" />
                             </FXCollections>
                           </items>
                           <HBox.margin>

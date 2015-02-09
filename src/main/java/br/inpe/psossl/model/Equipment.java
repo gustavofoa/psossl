@@ -36,15 +36,15 @@ public class Equipment {
 		this(++maxID, width, height, mass);
 	}
 
-	public Equipment(int id, double width, double height, double mass, Color color) {
+	public Equipment(int id, double width, double height, double mass, Color color, List<EquipmentRelationship> relationships) {
 		super();
-		relationships = new ArrayList<EquipmentRelationship>();
+		this.relationships = relationships;
 		updateParams(width, height, mass, color);
 		this.id = id;
 	}
 
 	public Equipment(double width, double height, double mass, Color color) {
-		this(++maxID, width, height, mass, color);
+		this(++maxID, width, height, mass, color, new ArrayList<EquipmentRelationship>());
 	}
 
 	public final void updateParams(double width, double height, double mass, Color color) {
@@ -218,6 +218,37 @@ public class Equipment {
 
 		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 
+	}
+
+	public void updateEquipmentRelationship(Container container) {
+		for (EquipmentRelationship relationship : this.getRelationships()) {
+			double x = this.getX() - container.getWidth() / 2;
+			double y = this.getY() - container.getHeight() / 2;
+			double xOther = relationship.getEquipment(this).getX() - container.getWidth() / 2;
+			double yOther = relationship.getEquipment(this).getY() - container.getHeight() / 2;
+
+			if (x > 0 && xOther < 0 && y > 0 && yOther < 0 || x < 0 && xOther > 0 && y < 0 && yOther > 0 || x > 0 && xOther < 0 && y < 0 && yOther > 0 || x < 0 && xOther > 0 && y > 0 && yOther < 0)
+				relationship.reinforceOppositeQuadrant();
+			else if (x > 0 && xOther > 0 && y > 0 && yOther > 0 || x < 0 && xOther < 0 && y < 0 && yOther < 0 || x > 0 && xOther > 0 && y < 0 && yOther < 0 || x < 0 && xOther < 0 && y > 0
+					&& yOther > 0)
+				relationship.reinforceSameQuadrant();
+			else
+				relationship.reinforceNeighborQuadrant();
+		}
+	}
+
+	public void addRelationship(Equipment equipment) {
+		for (EquipmentRelationship relationship : this.relationships)
+			if (relationship.getEquipment1() == equipment || relationship.getEquipment2() == equipment)
+				return;
+		EquipmentRelationship relationship = new EquipmentRelationship(this, equipment);
+		addRelationship(relationship);
+		equipment.addRelationship(relationship);
+
+	}
+
+	private void addRelationship(EquipmentRelationship relationship) {
+		relationships.add(relationship);
 	}
 
 }

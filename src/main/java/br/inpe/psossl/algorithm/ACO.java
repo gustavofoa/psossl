@@ -12,7 +12,7 @@ import br.inpe.psossl.model.Container;
 import br.inpe.psossl.model.Equipment;
 import br.inpe.psossl.model.Solution;
 
-public class ACOAlgorithm extends ConstructiveAlgorithm {
+public class ACO extends OptimizationAlgorithm {
 
 	private List<ACONode>	nodes;
 	public static int		n;
@@ -23,18 +23,10 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 	public static int		MAX		= 1000;
 	public static int		M		= 100;
 
-	public ACOAlgorithm(Container container, List<Equipment> items, Type type) {
-		super(container, items, type);
-		if (type == Type.NORMAL) {
-			SIGLA = "ACO";
-			NOME = "Ant Colony Optimization";
-		} else if (type == Type.WITH_EQUIPMENT_RELATIONSHIP_I) {
-			SIGLA = "ACO-ER_I";
-			NOME = "Ant Colony Optimization With Equipment Relationship I";
-		} else if (type == Type.WITH_EQUIPMENT_RELATIONSHIP_II) {
-			SIGLA = "ACO-ER_II";
-			NOME = "Ant Colony Optimization With Equipment Relationship II";
-		}
+	public ACO(Container container, List<Equipment> items) {
+		super(container, items);
+		SIGLA = "ACO";
+		NOME = "Ant Colony Optimization";
 	}
 
 	@Override
@@ -75,7 +67,7 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 				firstNode.setVisited(true);
 				solutionNodes.add(firstNode);// aloca a formiga em um nó
 												// aleatoriamente
-				addEquipmentIntoSolutionInRandomPosition(solutions[k], firstNode.getEquipment());
+				addEquipmentInRandomPosition(solutions[k], firstNode.getEquipment());
 
 				while (solutionNodes.size() < n) {
 
@@ -122,13 +114,7 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 
 					// adicionar equipamento na solução
 					try {
-						if (type == Type.NORMAL) {
-							addEquipmentIntoSolutionInRandomPosition(solutions[k], nextNode.getEquipment());
-						} else if (type == Type.WITH_EQUIPMENT_RELATIONSHIP_I) {
-							addEquipmentWithEquipmentRelationshipI(solutions[k], nextNode.getEquipment());
-						} else if (type == Type.WITH_EQUIPMENT_RELATIONSHIP_II) {
-							addEquipmentWithEquipmentRelationshipII(solutions[k], nextNode.getEquipment());
-						}
+						addEquipmentInRandomPosition(solutions[k], nextNode.getEquipment());
 					} catch (Exception e) {
 						for (ACONode node : solutionNodes) {
 							node.setVisited(false);
@@ -140,7 +126,7 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 						firstNode.setVisited(true);
 						solutionNodes.add(firstNode);// aloca a formiga em um nó
 														// aleatoriamente
-						addEquipmentIntoSolutionInRandomPosition(solutions[k], firstNode.getEquipment());
+						addEquipmentInRandomPosition(solutions[k], firstNode.getEquipment());
 					}
 
 				}
@@ -178,11 +164,8 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 				ACONode nextNode = solutionsNodes[k].get(j + 1);
 				for (ACOEdge edge : atual.getEdges()) {
 					if (edge.getNode1() == nextNode || edge.getNode2() == nextNode) {
-						edge.reinforcePheromoneFromNode(nextNode);
+						edge.reinforcePheromoneFromNode(nextNode, false);
 					}
-				}
-				if (type == Type.WITH_EQUIPMENT_RELATIONSHIP_I || type == Type.WITH_EQUIPMENT_RELATIONSHIP_II) {
-					atual.updateEquipmentRelationship();
 				}
 			}
 
@@ -199,7 +182,7 @@ public class ACOAlgorithm extends ConstructiveAlgorithm {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException ex) {
-			Logger.getLogger(ACOAlgorithm.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ACO.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		updateMessage(String.format("Execução finalizada! <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.cm2}", bestSolution.getFitness(),
 				bestSolution.getMassCenter(), bestSolution.getMassCenterX() - bestSolution.getContainer().getWidth() / 2, bestSolution.getMassCenterY() - bestSolution.getContainer().getHeight() / 2,

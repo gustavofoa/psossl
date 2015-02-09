@@ -1,6 +1,6 @@
 package br.inpe.psossl.algorithm.model;
 
-import br.inpe.psossl.algorithm.ACOAlgorithm;
+import br.inpe.psossl.algorithm.ACO;
 
 public class ACOEdge {
     
@@ -12,34 +12,34 @@ public class ACOEdge {
     public ACOEdge(ACONode node1, ACONode node2){
         this.node1 = node1;
         this.node2 = node2;
-        this.pheromoneFromNode1 = (double) 1/ACOAlgorithm.n;
-        this.pheromoneFromNode2 = (double) 1/ACOAlgorithm.n;
+        this.pheromoneFromNode1 = (double) 1/ACO.n;
+        this.pheromoneFromNode2 = (double) 1/ACO.n;
     }
     
     public void decayPheromoneFromNode(ACONode node){
         if(node == node1){
-            pheromoneFromNode1 = verifyLimiting(ACOAlgorithm.RO * pheromoneFromNode1);
+            pheromoneFromNode1 = verifyLimiting(ACO.RO * pheromoneFromNode1);
         }else if(node == node2){
-            pheromoneFromNode2 = verifyLimiting(ACOAlgorithm.RO * pheromoneFromNode2);
+            pheromoneFromNode2 = verifyLimiting(ACO.RO * pheromoneFromNode2);
         }
     }
     
-    public void reinforcePheromoneFromNode(ACONode node){
+    public void reinforcePheromoneFromNode(ACONode node, boolean withFeromoneDispersion){
         
         if(node == node1){//calcular o depósito de feromônio conforme [9] e [10]
-            pheromoneFromNode1 += verifyLimiting((1 - ACOAlgorithm.RO) * pheromoneFromNode1);
+            pheromoneFromNode1 += verifyLimiting((1 - ACO.RO) * pheromoneFromNode1);
         }else if(node == node2){
-            pheromoneFromNode2 += verifyLimiting((1 - ACOAlgorithm.RO) * pheromoneFromNode1);
+            pheromoneFromNode2 += verifyLimiting((1 - ACO.RO) * pheromoneFromNode1);
         }
         
     }
 
     private double verifyLimiting(double value){
         
-        if(value < (double) 0.1/ACOAlgorithm.n)
-            return (double) 0.1/ACOAlgorithm.n;
-        if(value > (double) 10/ACOAlgorithm.n)
-            return (double) 10/ACOAlgorithm.n;
+        if(value < (double) 0.1/ACO.n)
+            return (double) 0.1/ACO.n;
+        if(value > (double) 10/ACO.n)
+            return (double) 10/ACO.n;
         return value;
     }
     

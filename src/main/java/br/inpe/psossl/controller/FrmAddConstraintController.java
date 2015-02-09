@@ -1,4 +1,4 @@
-package br.inpe.psossl;
+package br.inpe.psossl.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;

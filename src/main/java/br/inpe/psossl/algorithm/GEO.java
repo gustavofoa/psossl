@@ -5,9 +5,9 @@ import br.inpe.psossl.model.Equipment;
 import br.inpe.psossl.model.Solution;
 import java.util.List;
 
-public class GEOAlgorithm extends OptimizationAlgorithm{
+public class GEO extends OptimizationAlgorithm{
 
-    public GEOAlgorithm(Container container, List<Equipment> items){
+    public GEO(Container container, List<Equipment> items){
         super(container, items);
     }
     
@@ -15,7 +15,7 @@ public class GEOAlgorithm extends OptimizationAlgorithm{
     public void execute() {
         
         updateMessage("Gerando solução inicial...");
-        bestSolution = generateSolution();
+        bestSolution = generateRandomSolution();
         
         updateMessage("Executanto GEO...");
     }

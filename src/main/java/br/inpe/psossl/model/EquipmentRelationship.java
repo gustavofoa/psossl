@@ -1,64 +1,83 @@
-
 package br.inpe.psossl.model;
 
+import br.inpe.psossl.algorithm.HBAE;
+
 public final class EquipmentRelationship {
-    
-    private Equipment equipment;
-    
-    private double sameQuadrant;
-    private double oppositeQuadrant;
-    private double neighborQuadrant;
-    public static double REINFORCE_RATE = 0.01;
-    public static double DECAY_RATE = 0.01;
-    
-    public EquipmentRelationship(Equipment equipment){
-        this.equipment = equipment;
-        clearRelationship();
-    }
-    
-    public void clearRelationship(){
-        sameQuadrant = oppositeQuadrant = neighborQuadrant = ((double)1)/((double)3);
-    }
 
-    public Equipment getEquipment() {
-        return equipment;
-    }
+	private Equipment	equipment1;
+	private Equipment	equipment2;
 
-    public void setEquipment(Equipment equipment) {
-        this.equipment = equipment;
-    }
+	private double		sameQuadrant;
+	private double		oppositeQuadrant;
+	private double		neighborQuadrant;
 
-    public double getSameQuadrant() {
-        return sameQuadrant;
-    }
+	public EquipmentRelationship(Equipment equipment1, Equipment equipment2) {
+		this.equipment1 = equipment1;
+		this.equipment2 = equipment2;
+		clearRelationship();
+	}
 
-    public double getOppositeQuadrant() {
-        return oppositeQuadrant;
-    }
+	public void clearRelationship() {
+		sameQuadrant = oppositeQuadrant = neighborQuadrant = 1;
+	}
 
-    public double getNeighborQuadrant() {
-        return neighborQuadrant;
-    }
+	public Equipment getEquipment1() {
+		return equipment1;
+	}
 
-    public void reinforceSameQuadrant() {
-        decayRelashionship();
-        this.sameQuadrant += REINFORCE_RATE;        
-    }
+	public void setEquipment1(Equipment equipment1) {
+		this.equipment1 = equipment1;
+	}
 
-    public void reinforceOppositeQuadrant() {
-        decayRelashionship();
-        this.oppositeQuadrant += REINFORCE_RATE;
-    }
+	public Equipment getEquipment2() {
+		return equipment2;
+	}
 
-    public void reinforceNeighborQuadrant() {
-        decayRelashionship();
-        this.neighborQuadrant += REINFORCE_RATE;
-    }
-    
-    private void decayRelashionship(){
-        this.sameQuadrant -= DECAY_RATE;
-        this.oppositeQuadrant -= DECAY_RATE;
-        this.neighborQuadrant -= DECAY_RATE;
-    }
-    
+	public void setEquipment2(Equipment equipment2) {
+		this.equipment2 = equipment2;
+	}
+
+	public double getSameQuadrant() {
+		return sameQuadrant;
+	}
+
+	public double getOppositeQuadrant() {
+		return oppositeQuadrant;
+	}
+
+	public double getNeighborQuadrant() {
+		return neighborQuadrant;
+	}
+
+	public void reinforceSameQuadrant() {
+		decayRelashionship();
+		this.sameQuadrant *= HBAE.REINFORCE_RATE;
+	}
+
+	public void reinforceOppositeQuadrant() {
+		decayRelashionship();
+		this.oppositeQuadrant *= HBAE.REINFORCE_RATE;
+	}
+
+	public void reinforceNeighborQuadrant() {
+		decayRelashionship();
+		this.neighborQuadrant *= (((HBAE.REINFORCE_RATE - 1) / 2) + 1);
+		// this.neighborQuadrant *= REINFORCE_RATE;
+	}
+
+	private void decayRelashionship() {
+		this.sameQuadrant *= HBAE.DECAY_RATE;
+		this.oppositeQuadrant *= HBAE.DECAY_RATE;
+		this.neighborQuadrant *= HBAE.DECAY_RATE;
+	}
+
+	public Equipment getEquipment(Equipment from) {
+		if (equipment1.equals(from))
+			return equipment2;
+		else if (equipment2.equals(from))
+			return equipment1;
+		else
+			return null;
+	}
+
 }

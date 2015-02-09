@@ -1,0 +1,44 @@
+{
+    "container": {
+        "width": 50,
+        "height": 50
+    },
+    "items": [
+        {
+            "width": 16,
+            "height": 13,
+            "mass": 12
+        },{
+            "width": 20,
+            "height": 15,
+            "mass": 16
+        },{
+            "width": 18,
+            "height": 16,
+            "mass": 15
+        }
+    ],
+    "defaultAlgorithm": "Aleatório",
+    "LAMBDA1": 10000,
+    "LAMBDA2": 1,
+    "EXECUCOES": 25,
+    "LOG_FOLDER": "/tmp/psossl/resultados/3_items/random",
+    "SEED": 2198375,
+    "RandomParams":{
+        "ITERACOES": 100000
+    },
+    "ACOParams":{
+        "ALPHA": 1,
+        "BETA": 1,
+        "TAXA_DECAIMENTO": 0.9,
+        "Q0": 0.2,
+        "ITERACOES": 10000,
+        "FORMIGAS": 10
+    },
+    "HBAEParams":{
+    	"ITERACOES": "10000",
+    	"REFORCO": "1.01",
+    	"DECAIMENTO": "0.99",
+    	"AGENTES": "10"
+    }
+}

@@ -1,4 +1,4 @@
-package br.inpe.psossl;
+package br.inpe.psossl.controller.params;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,11 +25,11 @@ public abstract class FrmParamsController implements Initializable {
         
     }    
 
-    void setPrimaryStage(Stage stage) {
+    public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }
     
-    void setStage(Stage stage){
+    public void setStage(Stage stage){
         this.stage = stage;
     }
 }

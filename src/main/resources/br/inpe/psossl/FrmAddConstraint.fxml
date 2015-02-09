@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 <?scenebuilder-classpath-element ../../../../build/classes?>
 
-<AnchorPane id="AnchorPane" prefHeight="230.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.FrmAddConstraintController">
+<AnchorPane id="AnchorPane" prefHeight="230.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.controller.FrmAddConstraintController">
   <children>
     <GridPane alignment="CENTER" hgap="10.0" layoutX="20.0" layoutY="14.0" vgap="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
       <children>

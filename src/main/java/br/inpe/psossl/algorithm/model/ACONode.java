@@ -35,28 +35,6 @@ public class ACONode implements Comparable<ACONode>{
         
     }
     
-    public void updateEquipmentRelationship(){
-        for(EquipmentRelationship relationship : equipment.getRelationships()){
-            double x = equipment.getX();
-            double y = equipment.getY();
-            double xOther = relationship.getEquipment().getX();
-            double yOther = relationship.getEquipment().getY();
-            
-            if(x > 0 && xOther < 0 && y > 0 && yOther < 0 ||
-               x < 0 && xOther > 0 && y < 0 && yOther > 0 ||
-               x > 0 && xOther < 0 && y < 0 && yOther > 0 ||
-               x < 0 && xOther > 0 && y > 0 && yOther < 0)
-                relationship.reinforceOppositeQuadrant();
-            else if(x > 0 && xOther > 0 && y > 0 && yOther > 0 ||
-                    x < 0 && xOther < 0 && y < 0 && yOther < 0 ||
-                    x > 0 && xOther > 0 && y < 0 && yOther < 0 ||
-                    x < 0 && xOther < 0 && y > 0 && yOther > 0)
-                relationship.reinforceSameQuadrant();
-            else
-                relationship.reinforceNeighborQuadrant();
-        }
-    }
-
     private void addEdge(ACOEdge edge) {
         edges.add(edge);
     }

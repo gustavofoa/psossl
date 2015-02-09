@@ -37,7 +37,7 @@ public class MPCA extends OptimizationAlgorithm {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException ex) {
-			Logger.getLogger(ACOAlgorithm.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ACO.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		updateMessage(String.format(
 				"Execução finalizada! <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.cm2}",

@@ -1,25 +1,28 @@
-package br.inpe.psossl;
+package br.inpe.psossl.controller.params;
 
-import br.inpe.psossl.algorithm.ACOAlgorithm;
-import br.inpe.psossl.algorithm.MPCA;
-import br.inpe.psossl.model.Solution;
-import br.inpe.psossl.ux.NumberTextField;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import br.inpe.psossl.Main;
+import br.inpe.psossl.algorithm.MPCA;
+import br.inpe.psossl.algorithm.OptimizationAlgorithm;
+import br.inpe.psossl.controller.FrmMainController;
+import br.inpe.psossl.model.Solution;
+import br.inpe.psossl.ux.NumberTextField;
 
 /**
  *
  * @author Gustavo Furtado
  */
-public class FrmMPCAParamsController extends FrmParamsController {
+public class FrmACOHBAEMPCAParamsController extends FrmParamsController {
     
     @FXML private NumberTextField txtSeed;
     @FXML private NumberTextField txtMAX;
@@ -38,7 +41,7 @@ public class FrmMPCAParamsController extends FrmParamsController {
         MPCA.M = txtM.getNumber().intValue();
         Solution.LAMBDA1 = txtLambda1.getNumber().doubleValue();
         Solution.LAMBDA2 = txtLambda2.getNumber().doubleValue();
-        Main.EXECUCOES = txtExecucoes.getNumber().intValue();
+        OptimizationAlgorithm.EXECUCOES = txtExecucoes.getNumber().intValue();
         Main.LOG_FOLDER = txtLogFolder.getText();
         stage.close();
     }
@@ -53,18 +56,14 @@ public class FrmMPCAParamsController extends FrmParamsController {
         
     }    
 
-    void setPrimaryStage(Stage stage) {
-        this.primaryStage = stage;
-    }
-    
-    void setStage(Stage stage){
+    public void setStage(Stage stage){
         this.stage = stage;
         txtSeed.setNumber(new BigDecimal(FrmMainController.SEED));
         txtMAX.setNumber(new BigDecimal(MPCA.MAX));
         txtM.setNumber(new BigDecimal(MPCA.M));
         txtLambda1.setNumber(new BigDecimal(Solution.LAMBDA1));
         txtLambda2.setNumber(new BigDecimal(Solution.LAMBDA2));
-        txtExecucoes.setNumber(new BigDecimal(Main.EXECUCOES));
+        txtExecucoes.setNumber(new BigDecimal(OptimizationAlgorithm.EXECUCOES));
         txtLogFolder.setText(Main.LOG_FOLDER);
     }
     

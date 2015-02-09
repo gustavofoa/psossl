@@ -16,8 +16,11 @@ public class Solution {
 	private double			massCenterY;
 	private double			massCenter;
 	private double			momentOfInertia;
-	public static double	LAMBDA1	= 1;
-	public static double	LAMBDA2	= 1;
+	public static double	LAMBDA1			= 1;
+	public static double	LAMBDA2			= 1;
+
+	private Double			fitness;
+	public boolean			fitnessUpdated	= false;
 
 	public Solution(Container container, List<Equipment> items) {
 		this.container = container;
@@ -102,27 +105,27 @@ public class Solution {
 
 		// Constraints
 		for (Constraint constraint : equipment.getConstraints()) {
-			
+
 			if (constraint.getType() == Type.Face && constraint.getFace() != face)
 				return false;
-			
-			if(constraint.getType() == Type.Min){
-				if(constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) < constraint.getDistance())
+
+			if (constraint.getType() == Type.Min) {
+				if (constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) < constraint.getDistance())
 					return false;
-				if(constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) < constraint.getDistance())
+				if (constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) < constraint.getDistance())
 					return false;
 			}
 
-			if(constraint.getType() == Type.Max){
-				if(constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) > constraint.getDistance())
+			if (constraint.getType() == Type.Max) {
+				if (constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) > constraint.getDistance())
 					return false;
-				if(constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) > constraint.getDistance())
+				if (constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) > constraint.getDistance())
 					return false;
 			}
-			
+
 		}
 
-		Equipment equip = new Equipment(equipment.getId(), equipment.getWidth(), equipment.getHeight(), equipment.getMass(), equipment.getColor());
+		Equipment equip = new Equipment(equipment.getId(), equipment.getWidth(), equipment.getHeight(), equipment.getMass(), equipment.getColor(), equipment.getRelationships());
 		equip.setX(x);
 		equip.setY(y);
 		equip.setAngle(angle);
@@ -137,6 +140,8 @@ public class Solution {
 			equipment.setAngle(angle);
 			equipment.setFace(face);
 		}
+
+		fitnessUpdated = false;
 
 		return true;
 
@@ -199,41 +204,43 @@ public class Solution {
 		return true;
 	}
 
-	private Double	fitness;
-
 	public double getFitness() {
+
+		if (fitnessUpdated)
+			return fitness;
 
 		double sumMX = .0, sumMY = .0, sumM = .0;
 		for (Equipment equipment : items) {
-			sumMX += equipment.getMass() * (equipment.getX() - container.getWidth() / 2);
-			sumMY += equipment.getMass() * (equipment.getY() - container.getHeight() / 2);
+			sumMX += equipment.getMass() * (equipment.getX() / 100 - container.getWidth() / 200);
+			sumMY += equipment.getMass() * (equipment.getY() / 100 - container.getHeight() / 200);
 			sumM += equipment.getMass();
 		}
-		massCenterX = sumMX + container.getWidth() / 2;
-		massCenterY = sumMY + container.getHeight() / 2;
+		massCenterX = sumMX + container.getWidth() / 200;
+		massCenterY = sumMY + container.getHeight() / 200;
 		massCenter = Math.sqrt(Math.pow(sumMX / sumM, 2) + Math.pow(sumMY / sumM, 2));
 
 		momentOfInertia = 0;
 		double r;
 		for (Equipment equipment : items) {
-			r = Math.sqrt(Math.pow(equipment.getX() - container.getWidth() / 2, 2) + Math.pow(equipment.getY() - container.getHeight() / 2, 2));
+			r = Math.sqrt(Math.pow(equipment.getX() / 100 - container.getWidth() / 200, 2) + Math.pow(equipment.getY() / 100 - container.getHeight() / 200, 2));
 			momentOfInertia += equipment.getMass() * Math.pow(r, 2);
 		}
 
 		fitness = LAMBDA2 * momentOfInertia - LAMBDA1 * massCenter;
+		fitnessUpdated = true;
 		return fitness;
 	}
 
 	public double getMassCenterX() {
-		return massCenterX;
+		return massCenterX*100;
 	}
 
 	public double getMassCenterY() {
-		return massCenterY;
+		return massCenterY*100;
 	}
 
 	public double getMassCenter() {
-		return massCenter;
+		return massCenter * 100;
 	}
 
 	public double getMomentOfInertia() {

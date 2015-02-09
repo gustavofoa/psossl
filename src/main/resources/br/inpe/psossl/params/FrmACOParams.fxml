@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.*?>
 <?scenebuilder-classpath-element ../../../../build/classes?>
 
-<AnchorPane id="AnchorPane" prefHeight="345.0" prefWidth="351.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="br.inpe.psossl.FrmACOParamsController">
+<AnchorPane id="AnchorPane" prefHeight="345.0" prefWidth="351.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.controller.params.FrmACOParamsController">
   <children>
-    <GridPane layoutX="38.0" layoutY="14.0" prefHeight="345.0" prefWidth="272.0">
+    <GridPane layoutX="13.0" layoutY="11.0" prefHeight="348.0" prefWidth="327.0">
       <children>
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Semente:" GridPane.columnIndex="0" GridPane.rowIndex="0">
           <GridPane.margin>
@@ -27,7 +27,7 @@
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Lambda 1:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="7" />
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Lambda 2:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="8" />
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Execuções:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="9" />
-        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Pasta Log" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="10" />
+        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Pasta Log:" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="10" />
         <NumberTextField fx:id="txtSeed" prefWidth="165.0001220703125" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <NumberTextField fx:id="txtAlpha" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <NumberTextField fx:id="txtBeta" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -43,21 +43,21 @@
         <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" onAction="#cancelEditParams" prefWidth="91.0" text="Cancelar" underline="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
       </children>
       <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="137.0" minWidth="10.0" prefWidth="128.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="145.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="149.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="159.0" />
       </columnConstraints>
       <rowConstraints>
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="29.0" prefHeight="22.0" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" percentHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" percentHeight="0.0" prefHeight="28.0" />
         <RowConstraints maxHeight="29.0" prefHeight="29.0" />
       </rowConstraints>
     </GridPane>
