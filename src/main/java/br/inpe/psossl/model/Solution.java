@@ -131,6 +131,7 @@ public class Solution {
 		equip.setAngle(angle);
 		equip.setFace(face);
 		equip.setFixed(equipment.isFixed());
+		equip.getConstraints().addAll(equipment.getConstraints());
 
 		if (!this.getItems().contains(equip))
 			this.getItems().add(equip);
@@ -232,11 +233,11 @@ public class Solution {
 	}
 
 	public double getMassCenterX() {
-		return massCenterX*100;
+		return massCenterX * 100;
 	}
 
 	public double getMassCenterY() {
-		return massCenterY*100;
+		return massCenterY * 100;
 	}
 
 	public double getMassCenter() {

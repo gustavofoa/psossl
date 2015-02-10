@@ -79,16 +79,22 @@ public abstract class OptimizationAlgorithm extends Observable {
 
 	public void addEquipmentInRandomPosition(Solution solution, Equipment equipment) {
 
+		addEquipmentInRandomPosition(solution, equipment, OptimizationAlgorithm.RANDOM);
+
+	}
+
+	public void addEquipmentInRandomPosition(Solution solution, Equipment equipment, Random RANDOM) {
+
 		if (solution.getItems().contains(equipment))
 			return;
 		double x, y, angle;
 		int count = 0, face = 0;
 		;
 		do {
-			x = OptimizationAlgorithm.RANDOM.nextDouble() * (solution.getContainer().getWidth() - equipment.getWidth()) + (equipment.getWidth() / 2);
-			y = OptimizationAlgorithm.RANDOM.nextDouble() * (solution.getContainer().getHeight() - equipment.getHeight()) + (equipment.getHeight() / 2);
-			angle = OptimizationAlgorithm.RANDOM.nextDouble() * 360;
-			face = OptimizationAlgorithm.RANDOM.nextInt(2) + 1;
+			x = RANDOM.nextDouble() * (solution.getContainer().getWidth() - equipment.getWidth()) + (equipment.getWidth() / 2);
+			y = RANDOM.nextDouble() * (solution.getContainer().getHeight() - equipment.getHeight()) + (equipment.getHeight() / 2);
+			angle = RANDOM.nextDouble() * 360;
+			face = RANDOM.nextInt(2) + 1;
 			count++;
 			if (count >= 1000)
 				throw new IllegalArgumentException("Não foi possível alocar o equipamento após " + count + " tentativas.");
@@ -98,6 +104,12 @@ public abstract class OptimizationAlgorithm extends Observable {
 	}
 
 	public Solution generateRandomSolution() {
+
+		return generateRandomSolution(RANDOM);
+
+	}
+
+	public Solution generateRandomSolution(Random RANDOM) {
 		Solution solution = new Solution(container, items, true);
 
 		List<Equipment> randomList = new ArrayList<Equipment>();
@@ -107,12 +119,20 @@ public abstract class OptimizationAlgorithm extends Observable {
 
 		try {
 			for (Equipment equipment : randomList)
-				addEquipmentInRandomPosition(solution, equipment);
+				addEquipmentInRandomPosition(solution, equipment, RANDOM);
 		} catch (IllegalArgumentException e) {
-			return generateRandomSolution();
+			return generateRandomSolution(RANDOM);
 		}
 
 		return solution;
+	}
+
+	public Container getContainer() {
+		return this.container;
+	}
+
+	public List<Equipment> getItems() {
+		return this.items;
 	}
 
 }

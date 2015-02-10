@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import br.inpe.psossl.algorithm.ACO;
 import br.inpe.psossl.algorithm.HBAE;
+import br.inpe.psossl.algorithm.MPCA;
 import br.inpe.psossl.algorithm.OptimizationAlgorithm;
 import br.inpe.psossl.algorithm.RandomAlgorithm;
 import br.inpe.psossl.controller.FrmMainController;
@@ -32,7 +33,7 @@ import br.inpe.psossl.model.Solution;
 public class Main extends Application {
 
 	public static String	LOG_FOLDER	= "";
-	private static String	CONFIG		= "/Config_6Items.json";
+	private static String	CONFIG		= "/Config_8Items.json";
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -100,6 +101,9 @@ public class Main extends Application {
 			HBAE.DECAY_RATE = jsonObject.getJSONObject("HBAEParams").getDouble("DECAIMENTO");
 			HBAE.AGENTS = jsonObject.getJSONObject("HBAEParams").getInt("AGENTES");
 
+			MPCA.MAX = jsonObject.getJSONObject("MPCAParams").getInt("ITERACOES");
+			MPCA.M = jsonObject.getJSONObject("MPCAParams").getInt("PARTICULAS");
+			
 			FrmMainController.SEED = jsonObject.getInt("SEED");
 			Solution.LAMBDA1 = jsonObject.getInt("LAMBDA1");
 			Solution.LAMBDA2 = jsonObject.getInt("LAMBDA2");

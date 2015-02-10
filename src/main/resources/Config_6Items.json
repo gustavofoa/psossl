@@ -34,7 +34,7 @@
     "LAMBDA1": 10000,
     "LAMBDA2": 1,
     "EXECUCOES": 25,
-    "LOG_FOLDER": "/tmp/psossl/resultados/6_items/random",
+    "LOG_FOLDER": "/home/gustavo/Área de Trabalho/Resultados BHSA/1000 iterações/6_items/random",
     "SEED": 2198375,
     "RandomParams":{
         "ITERACOES": 100000
@@ -48,9 +48,13 @@
         "FORMIGAS": 10
     },
     "HBAEParams":{
-    	"ITERACOES": "10000",
-    	"REFORCO": "1.01",
-    	"DECAIMENTO": "0.99",
-    	"AGENTES": "10"
+    	"ITERACOES": 10000,
+    	"REFORCO": 1.01,
+    	"DECAIMENTO": 0.99,
+    	"AGENTES": 10
+    },
+    "MPCAParams":{
+        "ITERACOES": 1000,
+        "PARTICULAS": 10
     }
 }
