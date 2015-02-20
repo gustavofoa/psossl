@@ -12,6 +12,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import br.inpe.psossl.Main;
+import br.inpe.psossl.algorithm.HBAE;
 import br.inpe.psossl.algorithm.MPCA;
 import br.inpe.psossl.algorithm.OptimizationAlgorithm;
 import br.inpe.psossl.controller.FrmMainController;
@@ -46,8 +47,8 @@ public class FrmMPCAParamsController extends FrmParamsController {
 	@FXML
 	protected void okEdiParams(ActionEvent event) throws IOException {
 		FrmMainController.SEED = txtSeed.getNumber().intValue();
-		MPCA.MAX = txtMAX.getNumber().intValue();
-		MPCA.M = txtM.getNumber().intValue();
+		HBAE.MAX = MPCA.MAX = txtMAX.getNumber().intValue();
+		HBAE.AGENTS = MPCA.M = txtM.getNumber().intValue();
 		Solution.LAMBDA1 = txtLambda1.getNumber().doubleValue();
 		Solution.LAMBDA2 = txtLambda2.getNumber().doubleValue();
 		OptimizationAlgorithm.EXECUCOES = txtExecucoes.getNumber().intValue();

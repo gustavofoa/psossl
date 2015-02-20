@@ -269,7 +269,7 @@ public class HBAE extends OptimizationAlgorithm {
 		List<Equipment> randomList = new ArrayList<Equipment>();
 		for (Equipment equipment : items)
 			randomList.add(equipment);
-		Collections.shuffle(randomList);
+		Collections.shuffle(randomList, OptimizationAlgorithm.RANDOM);
 
 		try {
 			for (Equipment equipment : randomList)

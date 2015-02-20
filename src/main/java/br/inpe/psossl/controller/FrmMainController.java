@@ -208,6 +208,8 @@ public class FrmMainController implements Initializable {
 			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmHBAEParams.fxml"));
 			break;
 		case "MPCA":
+		case "HBAE-I + MPCA":
+		case "HBAE-II + MPCA":
 			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmMPCAParams.fxml"));
 			break;
 		case "ACO + HBAE-I":
@@ -218,10 +220,6 @@ public class FrmMainController implements Initializable {
 			break;
 		case "ACO + MPCA":
 			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmACOMPCAParams.fxml"));
-			break;
-		case "HBAE-I + MPCA":
-		case "HBAE-II + MPCA":
-			fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/params/FrmHBAEMPCAParams.fxml"));
 			break;
 		case "ACO + HBAE-I + MPCA":
 		case "ACO + HBAE-II + MPCA":

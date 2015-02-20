@@ -115,7 +115,7 @@ public abstract class OptimizationAlgorithm extends Observable {
 		List<Equipment> randomList = new ArrayList<Equipment>();
 		for (Equipment equipment : items)
 			randomList.add(equipment);
-		Collections.shuffle(randomList);
+		Collections.shuffle(randomList, RANDOM);
 
 		try {
 			for (Equipment equipment : randomList)

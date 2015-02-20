@@ -25,37 +25,33 @@ public class MPCA extends OptimizationAlgorithm {
 		super(container, items);
 		SIGLA = "MPCA";
 		NOME = "Multi-Particle Collision Algorithm";
+
+		// Perturbar o equipamento num espaço de 5% do container
+		MPCA.PerturbationXLimit = container.getWidth() * 0.01;
+		MPCA.PerturbationYLimit = container.getHeight() * 0.01;
+		// Perturbar o equipamento num espaço de 1% do container
+		MPCA.SmallPerturbationXLimit = container.getWidth() * 0.001;
+		MPCA.SmallPerturbationYLimit = container.getHeight() * 0.001;
+
 	}
 
 	@Override
 	public void execute() {
-
-
-		PerturbationXLimit = container.getWidth() * 0.01; // Perturbar o
-															// equipamento num
-															// espaço de 5% do
-															// container
-		PerturbationYLimit = container.getHeight() * 0.01; // Perturbar o
-																// equipamento
-																// num espaço de
-																// 5% do
-																// container
-		SmallPerturbationXLimit = container.getWidth() * 0.001; // Perturbar o
-															// equipamento num
-															// espaço de 1% do
-															// container
-		SmallPerturbationYLimit = container.getHeight() * 0.001; // Perturbar o
-																// equipamento
-																// num espaço de
-																// 1% do
-																// container
 		
+
+		int[][] seeds = new int[MAX][M];
+		for (int i = 0; i < MAX; i++)
+			for (int j = 0; j < M; j++)
+				seeds[i][j] = RANDOM.nextInt();
+		
+
 		for (int i = 0; i < MAX; i++) {
 
 			List<Particle> particles = new ArrayList<Particle>();
+			
 
 			for (int j = 0; j < M; j++) {
-				Particle particle = new Particle(j + 1, new Random(RANDOM.nextInt()), this);
+				Particle particle = new Particle(new Random(seeds[i][j]), this);
 				particle.start();
 				particles.add(particle);
 			}
@@ -64,19 +60,18 @@ public class MPCA extends OptimizationAlgorithm {
 				try {
 					particle.join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
+
 			updateProgress(i, MAX);
 			updateMessage(String.format("Iteração %d de %d <-> Melhor solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", i, MAX, bestSolution.getFitness(),
 					bestSolution.getMassCenter(), bestSolution.getMassCenterX() - bestSolution.getContainer().getWidth() / 2, bestSolution.getMassCenterY() - bestSolution.getContainer().getHeight()
 							/ 2, bestSolution.getMomentOfInertia()));
 		}
 
-		updateMessage("nologscreenParâmetro utilizados:" + "\n              SEED = " + SEED + "\n         ITERAÇÕES = " + MAX + "\n        PARTÍCULAS = " + M + "\n          LAMBDA1  = " + Solution.LAMBDA1
-				+ "\n          LAMBDA2  = " + Solution.LAMBDA2 + "\nMelhor solução encontrada: " + bestSolution);
+		updateMessage("nologscreenParâmetro utilizados:" + "\n              SEED = " + SEED + "\n         ITERAÇÕES = " + MAX + "\n        PARTÍCULAS = " + MPCA.M + "\n          LAMBDA1  = "
+				+ Solution.LAMBDA1 + "\n          LAMBDA2  = " + Solution.LAMBDA2 + "\nMelhor solução encontrada: " + bestSolution);
 		updateProgress(MAX, MAX);
 		try {
 			Thread.sleep(500);

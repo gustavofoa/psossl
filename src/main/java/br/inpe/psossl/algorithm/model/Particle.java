@@ -6,21 +6,20 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import br.inpe.psossl.algorithm.MPCA;
+import br.inpe.psossl.algorithm.OptimizationAlgorithm;
 import br.inpe.psossl.model.Equipment;
 import br.inpe.psossl.model.Solution;
 
 public class Particle extends Thread {
 
-	private Random		RANDOM;
-	private Solution	oldSolution;
-	private Solution	newSolution;
-	private Solution	bestSolution;
-	private Solution	worstSolution;
-	private int			numero;
-	private MPCA		mpca;
+	private Random					RANDOM;
+	private Solution				oldSolution;
+	private Solution				newSolution;
+	private Solution				bestSolution;
+	private Solution				worstSolution;
+	private OptimizationAlgorithm	mpca;
 
-	public Particle(int numero, Random random, MPCA mpca) {
-		this.numero = numero;
+	public Particle(Random random, OptimizationAlgorithm mpca) {
 		this.RANDOM = random;
 		this.mpca = mpca;
 	}
@@ -31,7 +30,7 @@ public class Particle extends Thread {
 		bestSolution = mpca.bestSolution;
 		worstSolution = mpca.worstSolution;
 
-		oldSolution = mpca.generateRandomSolution();
+		oldSolution = mpca.generateRandomSolution(RANDOM);
 		if (bestSolution == null)
 			bestSolution = oldSolution;
 		if (worstSolution == null)
@@ -68,6 +67,8 @@ public class Particle extends Thread {
 	private void exploration() {
 		for (int i = 0; i < MAX; i++) {
 			smallPerturbation();
+			if (newSolution.getFitness() > bestSolution.getFitness())
+				bestSolution = newSolution;
 			if (newSolution.getFitness() > oldSolution.getFitness())
 				oldSolution = newSolution;
 		}
@@ -105,18 +106,14 @@ public class Particle extends Thread {
 
 	private void smallPerturbationAlocate(Equipment equipment) {
 		double x, y, angle;
-		int count = 0, face;
-		do {
-			x = (RANDOM.nextDouble() * 2 * MPCA.SmallPerturbationXLimit - MPCA.SmallPerturbationXLimit) + equipment.getX();
-			y = (RANDOM.nextDouble() * 2 * MPCA.SmallPerturbationYLimit - MPCA.SmallPerturbationYLimit) + equipment.getY();
-			angle = equipment.getAngle();
-			face = equipment.getFace();
-			count++;
-			if (count >= 10) {// Não muda de posição após 100 tentativas
-				break;
-			}
+		int face;
 
-		} while (!newSolution.validateAndAddItem(equipment, x, y, angle, face));
+		x = (RANDOM.nextDouble() * 2 * MPCA.SmallPerturbationXLimit - MPCA.SmallPerturbationXLimit) + equipment.getX();
+		y = (RANDOM.nextDouble() * 2 * MPCA.SmallPerturbationYLimit - MPCA.SmallPerturbationYLimit) + equipment.getY();
+		angle = equipment.getAngle();
+		face = equipment.getFace();
+
+		newSolution.validateAndAddItem(equipment, x, y, angle, face);
 	}
 
 	private void perturbation() {

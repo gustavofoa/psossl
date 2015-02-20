@@ -18,11 +18,11 @@
             "mass": 15
         }
     ],
-    "defaultAlgorithm": "Aleatório",
+    "defaultAlgorithm": "MPCA",
     "LAMBDA1": 10000,
     "LAMBDA2": 1,
     "EXECUCOES": 25,
-    "LOG_FOLDER": "/home/gustavo/Área de Trabalho/Resultados BHSA/1000 iterações/3_items/random",
+    "LOG_FOLDER": "/home/gustavo/Google Drive/Mestrado/Dissertação Gustavo Furtado/Resultados ACO_HBAE_MPCA/10000 iterações/3_items/mpca",
     "SEED": 2198375,
     "RandomParams":{
         "ITERACOES": 100000
