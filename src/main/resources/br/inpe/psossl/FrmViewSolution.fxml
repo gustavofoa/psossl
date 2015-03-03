@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import br.inpe.psossl.ux.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-classpath-element ../../../../build/classes?>
+
+<AnchorPane id="AnchorPane" prefHeight="392.0" prefWidth="526.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.inpe.psossl.controller.FrmViewSolutionController">
+   <children>
+      <TextArea fx:id="txtSolution" layoutX="14.0" layoutY="14.0" prefHeight="315.0" prefWidth="498.0" wrapText="true" />
+      <Button fx:id="btnView" layoutX="395.0" layoutY="337.0" mnemonicParsing="false" onAction="#viewAction" text="Visualizar" />
+   </children>
+</AnchorPane>
