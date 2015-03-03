@@ -33,7 +33,7 @@ import br.inpe.psossl.model.Solution;
 public class Main extends Application {
 
 	public static String	LOG_FOLDER	= "";
-	private static String	CONFIG		= "/Config_20Items.json";
+	private static String	CONFIG		= "/Config_5Items.json";
 
 	@Override
 	public void start(Stage stage) throws Exception {

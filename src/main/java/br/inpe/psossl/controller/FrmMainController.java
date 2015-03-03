@@ -87,6 +87,8 @@ public class FrmMainController implements Initializable {
 	@FXML
 	private Button					btnStart;
 	@FXML
+	private Button					btnViewSolution;
+	@FXML
 	private Label					lblInfo;
 	@FXML
 	private AnchorPane				drawArea1;
@@ -117,7 +119,7 @@ public class FrmMainController implements Initializable {
 
 	@FXML
 	protected void addItemAction(ActionEvent event) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FrmAddItem.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/FrmAddItem.fxml"));
 		Parent root = (Parent) fxmlLoader.load();
 		FrmAddItemController myController = fxmlLoader.getController();
 		Scene scene = new Scene(root);
@@ -245,6 +247,31 @@ public class FrmMainController implements Initializable {
 	}
 
 	@FXML
+	protected void viewSolution(ActionEvent event) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/br/inpe/psossl/FrmViewSolution.fxml"));
+		Parent root = (Parent) fxmlLoader.load();
+		FrmViewSolutionController myController = fxmlLoader.getController();
+		Scene scene = new Scene(root);
+
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Solução à visualizar");
+		dialogStage.setResizable(false);
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(primaryStage);
+		dialogStage.setScene(scene);
+		myController.setStage(dialogStage);
+		myController.setContainer(new Container(txtWidth.getNumber().doubleValue(), txtHeight.getNumber().doubleValue()));
+		dialogStage.showAndWait();
+		if(myController.getSolution() != null){
+			solution = myController.getSolution();
+			lblInfo.setText(String.format("Solução %.3f {Centro de Massa = %.3f (x = %.2f, y = %.2f), Momento de Inércia = %.2f Kg.m2}", solution.getFitness(),
+					solution.getMassCenter(), solution.getMassCenterX() - solution.getContainer().getWidth() / 2, solution.getMassCenterY() - solution.getContainer().getHeight()
+					/ 2, solution.getMomentOfInertia()));
+			this.drawSolution();
+		}
+	}
+
+	@FXML
 	public void startAction(ActionEvent event) {
 
 		if (execution == 0) {
@@ -296,6 +323,7 @@ public class FrmMainController implements Initializable {
 					btnEditItem.setDisable(running);
 					btnRemoveItem.setDisable(running);
 					btnAlgorithmParams.setDisable(running);
+					btnViewSolution.setDisable(running);
 					chkFixar.setDisable(running);
 					sliderX.setDisable(chkFixar.isSelected());
 					sliderY.setDisable(chkFixar.isSelected());
@@ -421,6 +449,7 @@ public class FrmMainController implements Initializable {
 		btnEditItem.setDisable(running);
 		btnRemoveItem.setDisable(running);
 		btnAlgorithmParams.setDisable(running);
+		btnViewSolution.setDisable(running);
 		chkFixar.setDisable(running);
 		sliderX.setDisable(chkFixar.isSelected());
 		sliderY.setDisable(chkFixar.isSelected());

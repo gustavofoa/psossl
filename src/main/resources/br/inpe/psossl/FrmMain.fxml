@@ -20,7 +20,7 @@
             <Label fx:id="lblInfo" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Informações de progresso da simulação ..." BorderPane.alignment="CENTER" />
           </bottom>
           <center>
-            <ProgressBar fx:id="progressBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0">
+            <ProgressBar fx:id="progressBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="581.0" progress="0.0">
               <BorderPane.margin>
                 <Insets left="10.0" />
               </BorderPane.margin>
@@ -36,6 +36,9 @@
               </BorderPane.margin>
             </Button>
           </right>
+               <left>
+                  <Button fx:id="btnViewSolution" mnemonicParsing="false" text="Visualizar solução" BorderPane.alignment="CENTER" onAction="#viewSolution" />
+               </left>
         </BorderPane>
       </bottom>
       <center>
@@ -134,8 +137,8 @@
 						                    <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" BorderPane.alignment="CENTER_RIGHT">
 						                      <children>
 						                        <Button fx:id="btnAddConstraint" disable="true" mnemonicParsing="false" onAction="#addConstraintAction" text="Adicionar" textAlignment="CENTER" underline="true" />
-						                        <Button fx:id="btnEditConstraint" disable="true" defaultButton="false" mnemonicParsing="false" onAction="#editConstraintAction" text="Editar" underline="true" />
-						                        <Button fx:id="btnRemoveConstraint" disable="true" defaultButton="false" mnemonicParsing="false" onAction="#removeConstraintAction" text="Remover" underline="true" />
+						                        <Button fx:id="btnEditConstraint" defaultButton="false" disable="true" mnemonicParsing="false" onAction="#editConstraintAction" text="Editar" underline="true" />
+						                        <Button fx:id="btnRemoveConstraint" defaultButton="false" disable="true" mnemonicParsing="false" onAction="#removeConstraintAction" text="Remover" underline="true" />
 						                      </children>
 						                    </HBox>
 						                 </top>
@@ -255,21 +258,21 @@
                             <FXCollections fx:factory="observableArrayList">
                               <String fx:value="Aleatório" />
                               <String fx:value="ACO" />
-                              <String fx:value="ACO-d" />
+                              <!--<String fx:value="ACO-d" />-->
                               <String fx:value="HBAE-I" />
                               <String fx:value="HBAE-II" />
                               <String fx:value="MPCA" />
                               <String fx:value="ACO + HBAE-I" />
                               <String fx:value="ACO + HBAE-II" />
-                              <String fx:value="ACO-d + HBAE-I" />
-                              <String fx:value="ACO-d + HBAE-II" />
+                              <!--<String fx:value="ACO-d + HBAE-I" />-->
+                              <!--<String fx:value="ACO-d + HBAE-II" />-->
                               <String fx:value="ACO + MPCA" />
                               <String fx:value="HBAE-I + MPCA" />
                               <String fx:value="HBAE-II + MPCA" />
                               <String fx:value="ACO + HBAE-I + MPCA" />
                               <String fx:value="ACO + HBAE-II + MPCA" />
-                              <String fx:value="ACO-d + HBAE-I + MPCA" />
-                              <String fx:value="ACO-d + HBAE-II + MPCA" />
+                              <!--<String fx:value="ACO-d + HBAE-I + MPCA" />-->
+                              <!--<String fx:value="ACO-d + HBAE-II + MPCA" />-->
                             </FXCollections>
                           </items>
                           <HBox.margin>
