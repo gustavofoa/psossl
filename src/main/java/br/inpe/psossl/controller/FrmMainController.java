@@ -737,9 +737,6 @@ public class FrmMainController implements Initializable {
 		case "ACO":
 			optimizationAlgorithm = new ACO(container, itemTable.getItems());
 			break;
-		case "ACO-d":
-			optimizationAlgorithm = new ACOd(container, itemTable.getItems());
-			break;
 		case "HBAE-I":
 			optimizationAlgorithm = new HBAE(container, itemTable.getItems(), Type.I);
 			break;
@@ -755,12 +752,6 @@ public class FrmMainController implements Initializable {
 		case "ACO + HBAE-II":
 			optimizationAlgorithm = new ACOHBAE(container, itemTable.getItems(), Type.II);
 			break;
-		case "ACO-d + HBAE-I":
-			optimizationAlgorithm = new ACOdHBAE(container, itemTable.getItems(), Type.I);
-			break;
-		case "ACO-d + HBAE-II":
-			optimizationAlgorithm = new ACOdHBAE(container, itemTable.getItems(), Type.II);
-			break;
 		case "ACO + MPCA":
 			optimizationAlgorithm = new ACOMPCA(container, itemTable.getItems());
 			break;
@@ -775,12 +766,6 @@ public class FrmMainController implements Initializable {
 			break;
 		case "ACO + HBAE-II + MPCA":
 			optimizationAlgorithm = new ACOHBAEMPCA(container, itemTable.getItems(), Type.II);
-			break;
-		case "ACO-d + HBAE-I + MPCA":
-			optimizationAlgorithm = new ACOdHBAEMPCA(container, itemTable.getItems(), Type.I);
-			break;
-		case "ACO-d + HBAE-II + MPCA":
-			optimizationAlgorithm = new ACOdHBAEMPCA(container, itemTable.getItems(), Type.II);
 			break;
 		}
 

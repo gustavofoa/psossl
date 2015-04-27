@@ -27,11 +27,11 @@ public class MPCA extends OptimizationAlgorithm {
 		NOME = "Multi-Particle Collision Algorithm";
 
 		// Perturbar o equipamento num espaço de 5% do container
-		MPCA.PerturbationXLimit = container.getWidth() * 0.01;
-		MPCA.PerturbationYLimit = container.getHeight() * 0.01;
+		MPCA.PerturbationXLimit = container.getWidth() * 0.05;
+		MPCA.PerturbationYLimit = container.getHeight() * 0.05;
 		// Perturbar o equipamento num espaço de 1% do container
-		MPCA.SmallPerturbationXLimit = container.getWidth() * 0.001;
-		MPCA.SmallPerturbationYLimit = container.getHeight() * 0.001;
+		MPCA.SmallPerturbationXLimit = container.getWidth() * 0.01;
+		MPCA.SmallPerturbationYLimit = container.getHeight() * 0.01;
 
 	}
 

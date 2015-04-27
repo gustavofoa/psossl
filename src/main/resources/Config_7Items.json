@@ -1,0 +1,64 @@
+{
+    "container": {
+        "width": 100,
+        "height": 100
+    },
+    "items": [
+        {
+            "width": 40,
+            "height": 35,
+            "mass": 8
+        },{
+            "width": 30,
+            "height": 20,
+            "mass": 2
+        },{
+            "width": 50,
+            "height": 30,
+            "mass": 15
+        },{
+            "width": 10,
+            "height": 15,
+            "mass": 0.6
+        },{
+            "width": 30,
+            "height": 30,
+            "mass": 3
+        },{
+            "width": 20,
+            "height": 25,
+            "mass": 2
+        },{
+            "width": 15,
+            "height": 15,
+            "mass": 1
+        }
+    ],
+    "defaultAlgorithm": "MPCA",
+    "LAMBDA1": 10000,
+    "LAMBDA2": 1,
+    "EXECUCOES": 25,
+    "LOG_FOLDER": "/home/gustavo/Google Drive/Mestrado/Dissertação Gustavo Furtado/Resultados ACO_HBAE_MPCA/10000 iterações/7_items/mpca",
+    "SEED": 8723523,
+    "RandomParams":{
+        "ITERACOES": 10000
+    },
+    "ACOParams":{
+        "ALPHA": 1,
+        "BETA": 1,
+        "TAXA_DECAIMENTO": 0.9,
+        "Q0": 0.2,
+        "ITERACOES": 1000,
+        "FORMIGAS": 10
+    },
+    "HBAEParams":{
+    	"ITERACOES": 10000,
+    	"REFORCO": 1.01,
+    	"DECAIMENTO": 0.99,
+    	"AGENTES": 10
+    },
+    "MPCAParams":{
+        "ITERACOES": 1000,
+        "PARTICULAS": 10
+    }
+}

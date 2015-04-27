@@ -106,22 +106,35 @@ public class Solution {
 		// Constraints
 		for (Constraint constraint : equipment.getConstraints()) {
 
-			if (constraint.getType() == Type.Face && constraint.getFace() != face)
+			if (constraint.getType() == Type.Face)
+				if (constraint.getFace() != face)
+					return false;
+				else
+					continue;
+
+			Equipment ref = null;
+
+			if (constraint.getEquipment1().equals(equipment))
+				for (Equipment allocatedEquipment : this.items)
+					if (allocatedEquipment.equals(constraint.getEquipment2())) {
+						ref = allocatedEquipment;
+						break;
+					}
+			if (constraint.getEquipment2().equals(equipment))
+				for (Equipment allocatedEquipment : this.items)
+					if (allocatedEquipment.equals(constraint.getEquipment1())) {
+						ref = allocatedEquipment;
+						break;
+					}
+
+			if (ref == null)
+				continue;
+
+			if (constraint.getType() == Type.Min && ref.distanceTo(x, y) < constraint.getDistance())
 				return false;
 
-			if (constraint.getType() == Type.Min) {
-				if (constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) < constraint.getDistance())
-					return false;
-				if (constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) < constraint.getDistance())
-					return false;
-			}
-
-			if (constraint.getType() == Type.Max) {
-				if (constraint.getEquipment1().equals(equipment) && constraint.getEquipment2().distanceTo(x, y) > constraint.getDistance())
-					return false;
-				if (constraint.getEquipment2().equals(equipment) && constraint.getEquipment1().distanceTo(x, y) > constraint.getDistance())
-					return false;
-			}
+			if (constraint.getType() == Type.Max && ref.distanceTo(x, y) > constraint.getDistance())
+				return false;
 
 		}
 
@@ -150,25 +163,12 @@ public class Solution {
 
 	private static boolean isPolygonsIntersecting(double[][] a, double[][] b) {
 		Double minA, maxA, projected, minB, maxB;
-
 		for (double[][] polygon : new double[][][] { a, b }) {
-
-			// for each polygon, look at each edge of the polygon, and determine
-			// if it separates
-			// the two shapes
 			for (int i1 = 0; i1 < polygon.length; i1++) {
-
-				// grab 2 vertices to create an edge
 				int i2 = (i1 + 1) % polygon.length;
 				double[] p1 = polygon[i1];
 				double[] p2 = polygon[i2];
-
-				// find the line perpendicular to this edge
 				double[] normal = new double[] { p2[1] - p1[1], p1[0] - p2[0] };
-
-				// for each vertex in the first shape, project it onto the line
-				// perpendicular to the edge
-				// and keep track of the min and max of these values
 				minA = maxA = null;
 				for (int j = 0; j < a.length; j++) {
 					projected = normal[0] * a[j][0] + normal[1] * a[j][1];
@@ -179,10 +179,6 @@ public class Solution {
 						maxA = projected;
 					}
 				}
-
-				// for each vertex in the second shape, project it onto the line
-				// perpendicular to the edge
-				// and keep track of the min and max of these values
 				minB = maxB = null;
 				for (int j = 0; j < b.length; j++) {
 					projected = normal[0] * b[j][0] + normal[1] * b[j][1];
@@ -193,10 +189,6 @@ public class Solution {
 						maxB = projected;
 					}
 				}
-
-				// if there is no overlap between the projects, the edge we are
-				// looking at separates the two
-				// polygons, and we know there is no overlap
 				if (maxA < minB || maxB < minA) {
 					return false;
 				}

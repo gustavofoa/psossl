@@ -33,12 +33,12 @@ import br.inpe.psossl.model.Solution;
 public class Main extends Application {
 
 	public static String	LOG_FOLDER	= "";
-	private static String	CONFIG		= "/Config_5Items.json";
+	private static String	CONFIG		= "/Config_8Items.json";
 
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		stage.setTitle("Plataforma de busca de soluções iniciais para o problema de alocação de experiementos em satélites");
+		stage.setTitle("Plataforma de busca de soluções iniciais para o problema de alocação de equipamentos em satélites");
 
 		// INITIALIZE MAXIMIZED
 		Screen screen = Screen.getPrimary();

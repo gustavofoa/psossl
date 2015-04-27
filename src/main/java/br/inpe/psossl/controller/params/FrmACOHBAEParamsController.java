@@ -63,7 +63,7 @@ public class FrmACOHBAEParamsController extends FrmParamsController {
 		ACO.BETA = txtBeta.getNumber().doubleValue();
 		ACO.RO = txtRO.getNumber().doubleValue();
 		ACO.Q0 = txtQ0.getNumber().doubleValue();
-		ACO.MAX = txtMAX.getNumber().intValue();
+		HBAE.MAX = ACO.MAX = txtMAX.getNumber().intValue();
 		HBAE.AGENTS = ACO.M = txtM.getNumber().intValue();
 		HBAE.REINFORCE_RATE = txtReinforce.getNumber().doubleValue();
 		HBAE.DECAY_RATE = txtDecay.getNumber().doubleValue();
