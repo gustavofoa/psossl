@@ -82,7 +82,7 @@ public class Main extends Application {
 					double heigth = ((JSONObject) array.get(i)).getDouble("height");
 					double mass = ((JSONObject) array.get(i)).getDouble("mass");
 					Equipment equipment = new Equipment(width, heigth, mass, Color.WHITE);
-					equipment.addConstraint(null, Type.Face, 0, 1);
+					//equipment.addConstraint(null, Type.Face, 0, 1);
 					items.add(equipment);
 				}
 			}

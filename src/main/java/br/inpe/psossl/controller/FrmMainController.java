@@ -501,6 +501,9 @@ public class FrmMainController implements Initializable {
 		container2.setStrokeWidth(2);
 		container2.setStroke(Color.BLACK);
 		drawArea2.getChildren().add(container2);
+		
+		List<Rectangle> otherFaceArea1 = new ArrayList<Rectangle>();
+		List<Rectangle> otherFaceArea2 = new ArrayList<Rectangle>();
 
 		for (Equipment equipment : solution.getItems()) {
 			wEquipTela = equipment.getWidth() * wTela / w;
@@ -512,9 +515,19 @@ public class FrmMainController implements Initializable {
 			rect.setRotate(-equipment.getAngle());
 			rect.setFill(equipment.getColor());
 			rect.setStrokeWidth(1);
+
+			Rectangle rect_back = new Rectangle(xEquip, yEquip, wEquipTela, hEquipTela);
+			rect_back.setRotate(-equipment.getAngle());
+			rect_back.setFill(Color.TRANSPARENT);
+			rect_back.setStrokeWidth(1);
+			rect_back.getStrokeDashArray().add(15d);
+			
 			if (itemTable.getSelectionModel().getSelectedIndex() != -1 && itemTable.getSelectionModel().getSelectedItem().equals(equipment)) {
 				rect.setStroke(Color.RED);
 				rect.setStrokeWidth(2);
+				rect_back.setStroke(Color.RED);
+				rect_back.setStrokeWidth(2);
+				
 
 				if (running) {
 					sliderX.setValue(equipment.getX());
@@ -525,20 +538,29 @@ public class FrmMainController implements Initializable {
 				}
 			} else {
 				rect.setStroke(Color.BLACK);
+				rect_back.setStroke(Color.GRAY);
 			}
-			if (equipment.getFace() == 1)
+			if (equipment.getFace() == 1){
 				drawArea1.getChildren().add(rect);
-			if (equipment.getFace() == 2)
+				otherFaceArea1.add(rect_back);
+			} else if (equipment.getFace() == 2){
 				drawArea2.getChildren().add(rect);
+				otherFaceArea2.add(rect_back);
+			}
 		}
+		
+		for (Rectangle rect_back : otherFaceArea1)
+			drawArea2.getChildren().add(rect_back);
+		for (Rectangle rect_back : otherFaceArea2)
+			drawArea1.getChildren().add(rect_back);
 
 		// centro de massa
 		double cX = x + (solution.getMassCenterX()) * wTela / w;
 		double cY = y + (h - solution.getMassCenterY()) * hTela / h;
 
-		Circle centroDeMassa1 = new Circle(cX, cY, 3, Paint.valueOf("#FF3333"));
+		Circle centroDeMassa1 = new Circle(cX, cY, 6, Paint.valueOf("#FF3333"));
 		drawArea1.getChildren().add(centroDeMassa1);
-		Circle centroDeMassa2 = new Circle(cX, cY, 3, Paint.valueOf("#FF3333"));
+		Circle centroDeMassa2 = new Circle(cX, cY, 6, Paint.valueOf("#FF3333"));
 		drawArea2.getChildren().add(centroDeMassa2);
 
 	}
